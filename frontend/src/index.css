@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+.text-gold {
+  color: #FFD700; 
+}
+
+.bg-black {
+  background-color: #000000; 
+}
+
+/* Nuevos estilos */
+body {
+  font-family: 'Inter', sans-serif;
+}
+
+.bg-gradient-to-r {
+  background: linear-gradient(to right, #3b82f6, #9333ea);
+}
+
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+}
+
+.shadow-lg {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.transition {
+  transition: all 0.3s ease-in-out;
+}
