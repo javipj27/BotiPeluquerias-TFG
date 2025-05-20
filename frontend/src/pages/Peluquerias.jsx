@@ -1,7 +1,16 @@
-import { peluquerias } from "../data/data";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { getPeluquerias } from "../api/peluquerias";
 
 export default function Peluquerias() {
+  const [peluquerias, setPeluquerias] = useState([]);
+
+  useEffect(() => {
+    getPeluquerias().then(data => {
+      setPeluquerias(data["hydra:member"] || data);
+    });
+  }, []);
+
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">Nuestras Peluquerías</h2>
@@ -12,7 +21,7 @@ export default function Peluquerias() {
             className="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition transform hover:-translate-y-1"
           >
             <img
-              src={p.logo}
+              src={p.logo || p.imagen}
               alt={`Logo de ${p.nombre}`}
               className="w-20 h-20 object-cover rounded-full mx-auto mb-4"
             />

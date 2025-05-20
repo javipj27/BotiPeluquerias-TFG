@@ -4,6 +4,8 @@ import Peluquerias from "./pages/Peluquerias";
 import DetallePeluqueria from "./pages/DetallePeluqueria";
 import Login from "./pages/Login";
 import Carrito from "./pages/Carrito";
+import CrearPeluqueria from "./pages/CrearPeluqueria";
+
 import { useState, useEffect } from "react";
 
 function PrivateRoute({ children }) {
@@ -110,6 +112,7 @@ export default function App() {
               </PrivateRoute>
             }
           />
+          <Route path="/crear-peluqueria" element={<CrearPeluqueria />} />
         </Routes>
       </div>
     </Router>
