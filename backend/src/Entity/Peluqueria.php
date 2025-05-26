@@ -31,6 +31,18 @@ class Peluqueria
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $imagen = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $logo = null;
+
+    #[ORM\Column(type: "json", nullable: true)]
+    private ?array $peluqueros = [];
+
+    #[ORM\Column(type: "json", nullable: true)]
+    private ?array $productos = [];
+
+    #[ORM\Column(type: "json", nullable: true)]
+    private ?array $galeria = [];
+
     public function getId(): ?int
     {
         return $this->id;
@@ -88,6 +100,45 @@ class Peluqueria
     public function setImagen(?string $imagen): self
     {
         $this->imagen = $imagen;
+        return $this;
+    }
+    public function getLogo(): ?string
+    {
+        return $this->logo;
+    }
+    public function setLogo(?string $logo): self
+    {
+        $this->logo = $logo;
+        return $this;
+    }
+
+    public function getPeluqueros(): ?array
+    {
+        return $this->peluqueros;
+    }
+    public function setPeluqueros(?array $peluqueros): self
+    {
+        $this->peluqueros = $peluqueros;
+        return $this;
+    }
+
+    public function getProductos(): ?array
+    {
+        return $this->productos;
+    }
+    public function setProductos(?array $productos): self
+    {
+        $this->productos = $productos;
+        return $this;
+    }
+
+    public function getGaleria(): ?array
+    {
+        return $this->galeria;
+    }
+    public function setGaleria(?array $galeria): self
+    {
+        $this->galeria = $galeria;
         return $this;
     }
 }

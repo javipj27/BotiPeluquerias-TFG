@@ -11,6 +11,25 @@ export default function Carrito({ carrito, setCarrito }) {
   };
 
   const handleComprar = () => {
+    // Generar PDF de compra
+    fetch("http://localhost:8000/api/pdf/compra", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        productos: carrito,
+        total: carrito.reduce((acc, prod) => acc + (prod.precio || 0), 0)
+      })
+    })
+      .then(res => res.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "compra.pdf";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+
     setCarrito([]);
     setMensajeCompra("¡Compra realizada con éxito!");
   };
@@ -36,7 +55,9 @@ export default function Carrito({ carrito, setCarrito }) {
                 />
                 <div>
                   <span className="font-bold text-gray-800">{producto.nombre}</span>
-                  <p className="text-gray-600 text-sm">Descripción: Producto de alta calidad</p>
+                  <p className="text-gray-600 text-sm">
+                    {producto.descripcion || "Descripción: Producto de alta calidad"}
+                  </p>
                 </div>
               </div>
               <button

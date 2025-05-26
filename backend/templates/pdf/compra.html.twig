@@ -1,0 +1,18 @@
+<h1>Resumen de Compra</h1>
+<ul>
+    {% for producto in productos %}
+        <li>
+            <strong>{{ producto.nombre }}</strong>
+            {% if producto.imagen %}
+                <br>
+                <img src="{{ producto.imagen }}" alt="{{ producto.nombre }}" style="width:80px; height:80px; object-fit:cover; border-radius:8px;">
+            {% endif %}
+            {% if producto.descripcion %}
+                <br>
+                <span>{{ producto.descripcion }}</span>
+            {% endif %}
+        </li>
+        <hr>
+    {% endfor %}
+</ul>
+<p><strong>Total:</strong> {{ total }} €</p>

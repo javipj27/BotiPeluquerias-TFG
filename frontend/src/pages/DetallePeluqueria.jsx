@@ -1,16 +1,34 @@
 import { useParams } from "react-router-dom";
-import { peluquerias } from "../data/data";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { getPeluqueriaById } from "../api/peluquerias";
 
 export default function DetallePeluqueria({ setCarrito }) {
   const { id } = useParams();
-  const peluqueria = peluquerias.find((p) => p.id === parseInt(id));
+  const [peluqueria, setPeluqueria] = useState(null);
   const [mostrarFormulario, setMostrarFormulario] = useState(false);
   const [slideIndex, setSlideIndex] = useState(0);
   const [horarioSeleccionado, setHorarioSeleccionado] = useState("");
+  const [peluqueroSeleccionado, setPeluqueroSeleccionado] = useState("");
+  const [nombreCliente, setNombreCliente] = useState("");
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
+  const [weather, setWeather] = useState(null); // Estado para el clima
 
-  if (!peluqueria) return <div className="p-8">Peluquería no encontrada.</div>;
+  useEffect(() => {
+    getPeluqueriaById(id).then(data => {
+      setPeluqueria({
+        ...data,
+        galeria: data.galeria || [data.imagen].filter(Boolean),
+        peluqueros: data.peluqueros || [],
+        productos: data.productos || [],
+      });
+      // Llama al endpoint de clima después de cargar la peluquería
+      fetch("http://localhost:8000/api/weather")
+        .then(res => res.json())
+        .then(setWeather);
+    });
+  }, [id]);
+
+  if (!peluqueria) return <div className="p-8">Cargando...</div>;
 
   const handleProductoClick = (producto) => {
     setProductoSeleccionado(producto);
@@ -22,12 +40,13 @@ export default function DetallePeluqueria({ setCarrito }) {
 
   const handleAddToCart = () => {
     if (productoSeleccionado) {
-      console.log("Producto seleccionado:", productoSeleccionado); // Verifica los datos aquí
       setCarrito((prevCarrito) => [
         ...prevCarrito,
         {
           nombre: productoSeleccionado.nombre,
-          imagen: productoSeleccionado.imagen, // Aseguramos que la imagen se incluye
+          imagen: productoSeleccionado.imagen,
+          descripcion: productoSeleccionado.descripcion,
+          precio: productoSeleccionado.precio || 0
         },
       ]);
       alert("Producto añadido al carrito");
@@ -52,6 +71,34 @@ export default function DetallePeluqueria({ setCarrito }) {
     return horarios;
   };
 
+  const handleReserva = (e) => {
+    e.preventDefault();
+    // Generar PDF de cita
+    fetch("http://localhost:8000/api/pdf/cita", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        nombre: nombreCliente,
+        peluqueria: peluqueria.nombre,
+        peluquero: peluqueroSeleccionado,
+        hora: horarioSeleccionado
+      })
+    })
+      .then(res => res.blob())
+      .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "cita.pdf";
+        a.click();
+        window.URL.revokeObjectURL(url);
+      });
+    setMostrarFormulario(false);
+    setNombreCliente("");
+    setPeluqueroSeleccionado("");
+    setHorarioSeleccionado("");
+  };
+
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
@@ -59,6 +106,11 @@ export default function DetallePeluqueria({ setCarrito }) {
         <div className="p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
           <h2 className="text-4xl font-bold">{peluqueria.nombre}</h2>
           <p className="mt-2">📍 {peluqueria.direccion}</p>
+          {weather && (
+            <div className="mt-2">
+              <span>🌡️ {weather.temperature}°C | 💨 {weather.windspeed} km/h</span>
+            </div>
+          )}
         </div>
 
         {/* Carrusel */}
@@ -127,19 +179,28 @@ export default function DetallePeluqueria({ setCarrito }) {
 
           {/* Formulario */}
           {mostrarFormulario && (
-            <form className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md space-y-4">
+            <form className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md space-y-4" onSubmit={handleReserva}>
               <div>
                 <label className="block font-bold mb-1">Nombre del cliente</label>
                 <input
                   type="text"
                   className="w-full p-2 border rounded-lg"
                   placeholder="Tu nombre"
+                  value={nombreCliente}
+                  onChange={e => setNombreCliente(e.target.value)}
+                  required
                 />
               </div>
 
               <div>
                 <label className="block font-bold mb-1">Selecciona peluquero</label>
-                <select className="w-full p-2 border rounded-lg">
+                <select
+                  className="w-full p-2 border rounded-lg"
+                  value={peluqueroSeleccionado}
+                  onChange={e => setPeluqueroSeleccionado(e.target.value)}
+                  required
+                >
+                  <option value="">Selecciona...</option>
                   {peluqueria.peluqueros.map((pel, i) => (
                     <option key={i} value={pel}>
                       {pel}
@@ -160,6 +221,7 @@ export default function DetallePeluqueria({ setCarrito }) {
                         checked={horarioSeleccionado === hora}
                         onChange={() => setHorarioSeleccionado(hora)}
                         className="form-radio"
+                        required
                       />
                       <span>{hora}</span>
                     </label>
@@ -189,7 +251,7 @@ export default function DetallePeluqueria({ setCarrito }) {
             />
             <h3 className="text-2xl font-bold mb-2">{productoSeleccionado.nombre}</h3>
             <p className="text-gray-600 mb-4">
-              Descripción del producto: Este es un producto de alta calidad.
+              {productoSeleccionado.descripcion || "Descripción del producto: Este es un producto de alta calidad."}
             </p>
             <button
               className="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition"

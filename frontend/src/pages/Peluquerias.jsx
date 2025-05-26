@@ -6,10 +6,16 @@ export default function Peluquerias() {
   const [peluquerias, setPeluquerias] = useState([]);
 
   useEffect(() => {
-    getPeluquerias().then(data => {
-      setPeluquerias(data["hydra:member"] || data);
-    });
-  }, []);
+  getPeluquerias().then(data => {
+    if (Array.isArray(data)) {
+      setPeluquerias(data);
+    } else if (Array.isArray(data.member)) {
+      setPeluquerias(data.member);
+    } else {
+      setPeluquerias([]);
+    }
+  });
+}, []);
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
