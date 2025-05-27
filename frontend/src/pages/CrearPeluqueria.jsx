@@ -108,10 +108,12 @@ export default function CrearPeluqueria() {
 
   const handleSubmit = async e => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
     const res = await fetch("http://localhost:8000/api/peluquerias", {
       method: "POST",
       headers: {
-        "Content-Type": "application/ld+json"
+        "Content-Type": "application/ld+json",
+        "X-AUTH-TOKEN": token
       },
       body: JSON.stringify(form)
     });

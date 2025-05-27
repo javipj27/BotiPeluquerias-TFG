@@ -6,20 +6,21 @@ export default function Peluquerias() {
   const [peluquerias, setPeluquerias] = useState([]);
 
   useEffect(() => {
-  getPeluquerias().then(data => {
-    if (Array.isArray(data)) {
-      setPeluquerias(data);
-    } else if (Array.isArray(data.member)) {
-      setPeluquerias(data.member);
-    } else {
-      setPeluquerias([]);
-    }
-  });
-}, []);
+    getPeluquerias().then(data => {
+      if (Array.isArray(data)) {
+        setPeluquerias(data);
+      } else if (Array.isArray(data.member)) {
+        setPeluquerias(data.member);
+      } else {
+        setPeluquerias([]);
+      }
+    });
+  }, []);
 
   return (
     <div className="p-8 bg-gray-100 min-h-screen">
       <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">Nuestras Peluquerías</h2>
+      
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {peluquerias.map((p) => (
           <div
