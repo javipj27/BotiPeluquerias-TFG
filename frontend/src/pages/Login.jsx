@@ -34,43 +34,43 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
-        <h2 className="text-2xl font-bold mb-6 text-center">Iniciar Sesión</h2>
-        {error && <p className="text-red-500 text-center mb-4">{error}</p>}
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-700 via-cyan-400 to-orange-300">
+      <div className="bg-white/95 p-8 rounded-2xl shadow-2xl max-w-md w-full animate-fade-in">
+        <h2 className="text-3xl font-extrabold mb-6 text-center text-blue-700">Iniciar Sesión</h2>
+        {error && <p className="text-error text-center mb-4">{error}</p>}
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block font-bold mb-1">Email</label>
+            <label className="block font-bold mb-1 text-dark">Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Ingresa tu email"
               required
             />
           </div>
           <div>
-            <label className="block font-bold mb-1">Contraseña</label>
+            <label className="block font-bold mb-1 text-dark">Contraseña</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border rounded-lg"
+              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary"
               placeholder="Ingresa tu contraseña"
               required
             />
           </div>
           <button
             type="submit"
-            className="w-full px-4 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition"
+            className="w-full px-4 py-2 rounded-full bg-gradient-to-r from-orange-400 via-green-400 to-blue-500 text-white font-bold shadow-lg hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
           >
             Iniciar Sesión
           </button>
         </form>
         <p className="mt-4 text-center">
           ¿No tienes cuenta?{" "}
-          <a href="/register" className="text-blue-600 hover:underline">
+          <a href="/register" className="text-accent hover:underline">
             Regístrate
           </a>
         </p>

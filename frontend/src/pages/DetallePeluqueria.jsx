@@ -14,22 +14,28 @@ export default function DetallePeluqueria({ setCarrito }) {
   const [weather, setWeather] = useState(null); // Estado para el clima
 
   useEffect(() => {
-    getPeluqueriaById(id).then(data => {
-      setPeluqueria({
-        ...data,
-        galeria: data.galeria || [data.imagen].filter(Boolean),
-        peluqueros: data.peluqueros || [],
-        productos: data.productos || [],
-      });
-      // Llama al endpoint de clima después de cargar la peluquería
-      fetch("http://localhost:8000/api/weather")
-        .then(res => res.json())
-        .then(setWeather);
+  getPeluqueriaById(id).then(data => {
+    setPeluqueria({
+      ...data,
+      galeria: data.galeria || [data.imagen].filter(Boolean),
+      peluqueros: data.peluqueros || [],
+      productos: data.productos || [],
     });
-  }, [id]);
+    // Llama al endpoint de clima después de cargar la peluquería
+    const token = localStorage.getItem("token");
+    fetch("http://localhost:8000/api/weather", {
+      headers: { "X-AUTH-TOKEN": token }
+    })
+      .then(res => res.json())
+      .then(setWeather);
+  });
+}, [id]);
 
-  if (!peluqueria) return <div className="p-8">Cargando...</div>;
-
+if (!peluqueria) return (
+  <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-700 via-cyan-400 to-orange-300">
+    <span className="w-20 h-20 border-8 border-white border-t-blue-600 border-b-orange-400 rounded-full animate-spin"></span>
+  </div>
+);
   const handleProductoClick = (producto) => {
     setProductoSeleccionado(producto);
   };
@@ -73,10 +79,13 @@ export default function DetallePeluqueria({ setCarrito }) {
 
   const handleReserva = (e) => {
     e.preventDefault();
+        const token = localStorage.getItem("token"); 
     // Generar PDF de cita
     fetch("http://localhost:8000/api/pdf/cita", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { "Content-Type": "application/json", 
+                "X-AUTH-TOKEN": token // <-- Añadido
+      },
       body: JSON.stringify({
         nombre: nombreCliente,
         peluqueria: peluqueria.nombre,
@@ -172,8 +181,8 @@ export default function DetallePeluqueria({ setCarrito }) {
 
           <button
             onClick={() => setMostrarFormulario(!mostrarFormulario)}
-            className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-md transition"
-          >
+            className="px-6 py-3 rounded-full bg-gradient-to-r from-blue-600 via-cyan-500 to-green-400 text-white font-bold shadow-md transition hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400"
+          > 
             {mostrarFormulario ? "Cerrar formulario" : "Agendar cita"}
           </button>
 
@@ -254,13 +263,13 @@ export default function DetallePeluqueria({ setCarrito }) {
               {productoSeleccionado.descripcion || "Descripción del producto: Este es un producto de alta calidad."}
             </p>
             <button
-              className="px-4 py-2 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition"
+              className="px-4 py-2 rounded-full bg-gradient-to-r from-green-500 via-blue-500 to-cyan-400 text-white font-bold shadow hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-green-400"
               onClick={handleAddToCart}
             >
               Añadir al carrito
             </button>
             <button
-              className="mt-4 px-4 py-2 bg-gray-300 text-gray-800 font-bold rounded-lg hover:bg-gray-400 transition"
+              className="mt-4 px-4 py-2 rounded-full bg-gray-300 text-gray-800 font-bold shadow hover:bg-gray-400 transition focus:outline-none focus:ring-2 focus:ring-gray-400"
               onClick={cerrarModal}
             >
               Cerrar

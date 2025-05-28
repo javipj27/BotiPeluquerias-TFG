@@ -44,47 +44,49 @@ export default function AdminPeluquerias() {
   };
 
   return (
-    <div className="p-8 bg-white min-h-screen">
-      <h2 className="text-2xl font-bold mb-6 text-gray-800">Administración de Peluquerías</h2>
-      <div className="flex gap-4 mb-4">
-        <button
-          onClick={handleExport}
-          className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
-        >
-          Exportar Peluquerías
-        </button>
-        <label className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 cursor-pointer">
-          Importar Peluquerías
-          <input
-            type="file"
-            accept="application/json"
-            onChange={handleImport}
-            ref={fileInputRef}
-            style={{ display: "none" }}
-          />
-        </label>
-        <Link
-          to="/crear-peluqueria"
-          className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700"
-        >
-          Crear Peluquería
-        </Link>
-      </div>
-      <div className="mt-8">
-        <h3 className="text-xl font-bold mb-4">Listado de Peluquerías</h3>
-        <ul>
-          {peluquerias.map(p => (
-            <li key={p.id} className="flex justify-between items-center border-b py-2">
-              <span>{p.nombre}</span>
-              <button
-                onClick={() => handleDelete(p.id)}
-                className="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700"
-              >
-                Borrar
-              </button>
-            </li>
-          ))}
-        </ul>
+    <div className="p-8 bg-gradient-to-br from-blue-700 via-cyan-400 to-orange-300 min-h-screen">
+      <div className="max-w-3xl mx-auto bg-white/95 rounded-2xl shadow-2xl p-8 animate-fade-in">
+        <h2 className="text-2xl font-bold mb-6 text-blue-700">Administración de Peluquerías</h2>
+        <div className="flex flex-wrap gap-4 mb-4">
+          <button
+            onClick={handleExport}
+            className="px-4 py-2 rounded-full bg-gradient-to-r from-green-500 via-blue-500 to-cyan-400 text-white font-bold shadow hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-green-400"
+          >
+            Exportar Peluquerías
+          </button>
+          <label className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 via-cyan-500 to-green-400 text-white font-bold shadow cursor-pointer hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-blue-400">
+            Importar Peluquerías
+            <input
+              type="file"
+              accept="application/json"
+              onChange={handleImport}
+              ref={fileInputRef}
+              style={{ display: "none" }}
+            />
+          </label>
+          <Link
+            to="/crear-peluqueria"
+            className="px-4 py-2 rounded-full bg-gradient-to-r from-orange-400 via-pink-500 to-purple-500 text-white font-bold shadow hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-orange-400"
+          >
+            Crear Peluquería
+          </Link>
+        </div>
+        <div className="mt-8">
+          <h3 className="text-xl font-bold mb-4 text-blue-700">Listado de Peluquerías</h3>
+          <ul>
+            {peluquerias.map(p => (
+              <li key={p.id} className="flex justify-between items-center border-b py-2">
+                <span className="text-gray-800">{p.nombre}</span>
+                <button
+                  onClick={() => handleDelete(p.id)}
+                  className="px-3 py-1 rounded-full bg-gradient-to-r from-red-500 via-pink-500 to-orange-400 text-white font-bold shadow hover:scale-110 transition focus:outline-none focus:ring-2 focus:ring-red-400"
+                >
+                  Borrar
+                </button>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
