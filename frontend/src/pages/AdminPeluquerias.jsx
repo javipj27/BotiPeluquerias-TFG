@@ -44,7 +44,7 @@ export default function AdminPeluquerias() {
   };
 
   return (
-    <div className="p-8 bg-gradient-to-br from-blue-700 via-cyan-400 to-orange-300 min-h-screen">
+    <div className="p-8 min-h-screen">
       <div className="max-w-3xl mx-auto bg-white/95 rounded-2xl shadow-2xl p-8 animate-fade-in">
         <h2 className="text-2xl font-bold mb-6 text-blue-700">Administración de Peluquerías</h2>
         <div className="flex flex-wrap gap-4 mb-4">

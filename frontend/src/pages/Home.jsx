@@ -2,9 +2,9 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-700 via-cyan-400 to-orange-300">
-      <div className="bg-white/95 p-10 rounded-3xl shadow-2xl max-w-2xl w-full animate-fade-in text-center">
-        <h1 className="text-4xl font-extrabold text-blue-700 drop-shadow mb-4">
+    <div className="min-h-screen flex items-center justify-center ">
+  <div className="bg-white/90 p-10 rounded-3xl shadow-2xl max-w-2xl w-full animate-fade-in text-center">
+        <h1 className="text-4xl font-extrabold  text-blue-700 drop-shadow mb-4">
           Bienvenido a BotiPeluquerías
         </h1>
         <p className="mt-2 text-gray-700 text-lg mb-8">
@@ -24,7 +24,7 @@ export default function Home() {
             Ir al Carrito
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 ">
           <div className="bg-blue-100 rounded-xl p-6 shadow flex flex-col items-center animate-fade-in">
             <span className="text-4xl mb-2">💇‍♂️</span>
             <h3 className="font-bold text-blue-700 mb-1">Reserva fácil</h3>

@@ -14,28 +14,28 @@ export default function DetallePeluqueria({ setCarrito }) {
   const [weather, setWeather] = useState(null); // Estado para el clima
 
   useEffect(() => {
-  getPeluqueriaById(id).then(data => {
-    setPeluqueria({
-      ...data,
-      galeria: data.galeria || [data.imagen].filter(Boolean),
-      peluqueros: data.peluqueros || [],
-      productos: data.productos || [],
+    getPeluqueriaById(id).then(data => {
+      setPeluqueria({
+        ...data,
+        galeria: data.galeria || [data.imagen].filter(Boolean),
+        peluqueros: data.peluqueros || [],
+        productos: data.productos || [],
+      });
+      // Llama al endpoint de clima después de cargar la peluquería
+      const token = localStorage.getItem("token");
+      fetch("http://localhost:8000/api/weather", {
+        headers: { "X-AUTH-TOKEN": token }
+      })
+        .then(res => res.json())
+        .then(setWeather);
     });
-    // Llama al endpoint de clima después de cargar la peluquería
-    const token = localStorage.getItem("token");
-    fetch("http://localhost:8000/api/weather", {
-      headers: { "X-AUTH-TOKEN": token }
-    })
-      .then(res => res.json())
-      .then(setWeather);
-  });
-}, [id]);
+  }, [id]);
 
-if (!peluqueria) return (
-  <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-700 via-cyan-400 to-orange-300">
-    <span className="w-20 h-20 border-8 border-white border-t-blue-600 border-b-orange-400 rounded-full animate-spin"></span>
-  </div>
-);
+  if (!peluqueria) return (
+    <div className="flex items-center justify-center min-h-screen ">
+      <span className="w-20 h-20 border-8 border-white border-t-blue-600 border-b-orange-400 rounded-full animate-spin"></span>
+    </div>
+  );
   const handleProductoClick = (producto) => {
     setProductoSeleccionado(producto);
   };
@@ -79,12 +79,13 @@ if (!peluqueria) return (
 
   const handleReserva = (e) => {
     e.preventDefault();
-        const token = localStorage.getItem("token"); 
+    const token = localStorage.getItem("token");
     // Generar PDF de cita
     fetch("http://localhost:8000/api/pdf/cita", {
       method: "POST",
-      headers: { "Content-Type": "application/json", 
-                "X-AUTH-TOKEN": token // <-- Añadido
+      headers: {
+        "Content-Type": "application/json",
+        "X-AUTH-TOKEN": token
       },
       body: JSON.stringify({
         nombre: nombreCliente,
@@ -109,8 +110,8 @@ if (!peluqueria) return (
   };
 
   return (
-    <div className="p-8 bg-gray-100 min-h-screen">
-      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+    <div className="p-8 min-h-screen">
+      <div className="max-w-5xl mx-auto bg-white rounded-lg shadow-2xl overflow-hidden text-gray-900">
         {/* Header */}
         <div className="p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white">
           <h2 className="text-4xl font-bold">{peluqueria.nombre}</h2>
@@ -252,7 +253,7 @@ if (!peluqueria) return (
       {/* Modal */}
       {productoSeleccionado && (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-70 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full text-gray-900">
             <img
               src={productoSeleccionado.imagen}
               alt={productoSeleccionado.nombre}

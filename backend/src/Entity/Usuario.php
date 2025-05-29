@@ -27,6 +27,22 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(length: 64, unique: true, nullable: true)]
     private ?string $apiToken = null;
 
+    #[ORM\Column(type: "boolean")]
+private $isVerified = false;
+
+#[ORM\Column(type: "string", length: 64, nullable: true)]
+private $verificationToken;
+
+#[ORM\Column(length: 50, unique: true)]
+private ?string $username = null;
+
+#[ORM\Column(length: 100)]
+private ?string $nombre = null;
+
+#[ORM\Column(length: 20, nullable: true)]
+private ?string $telefono = null;
+
+
     public function getId(): ?int
     {
         return $this->id;
@@ -92,4 +108,50 @@ class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return (string) $this->email;
     }
+    public function isVerified(): bool
+    {
+        return $this->isVerified;
+    }
+    public function setVerified(bool $isVerified): static
+    {
+        $this->isVerified = $isVerified;
+        return $this;
+    }
+    public function getVerificationToken(): ?string
+    {
+        return $this->verificationToken;
+    }
+    public function setVerificationToken(?string $verificationToken): static
+    {
+        $this->verificationToken = $verificationToken;
+        return $this;
+    }
+
+    public function getUsernameField(): ?string
+{
+    return $this->username;
+}
+public function setUsernameField(string $username): static
+{
+    $this->username = $username;
+    return $this;
+}
+public function getNombre(): ?string
+{
+    return $this->nombre;
+}
+public function setNombre(string $nombre): static
+{
+    $this->nombre = $nombre;
+    return $this;
+}
+public function getTelefono(): ?string
+{
+    return $this->telefono;
+}
+public function setTelefono(?string $telefono): static
+{
+    $this->telefono = $telefono;
+    return $this;
+}
 }

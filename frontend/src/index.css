@@ -1,5 +1,5 @@
 @import "tailwindcss";
-
+@plugin "daisyui";
 @import "tailwindcss/utilities";
 
 
@@ -39,4 +39,17 @@ body {
 }
 .animate-fade-in {
   animation: fade-in 0.7s both;
+}
+.bg-peluqueria-clara {
+  background-image: url('../src/assets/bg-peluqueria-clara.jpg');
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100%;
+}
+.bg-peluqueria-oscura {
+  background-image: url('../src/assets/bg-peluqueria-ocsura.jpg');
+  background-size: cover;
+  background-position: center;
+  color: white;
 }

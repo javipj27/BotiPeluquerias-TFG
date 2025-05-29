@@ -98,17 +98,16 @@ export default function CrearPeluqueria() {
     }
   };
 
-  return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-700 via-cyan-400 to-orange-300">
-      <div className="bg-white/95 p-8 rounded-2xl shadow-2xl max-w-2xl w-full animate-fade-in mt-5">
-        <h2 className="text-3xl font-extrabold mb-6 text-center text-blue-700">Crear Peluquería</h2>
-        {mensaje && <p className="mb-4 text-center font-bold text-green-600">{mensaje}</p>}
+   return (
+    <div className="min-h-screen flex items-center justify-center ">
+      <div className="bg-white/95 p-8 rounded-2xl shadow-2xl max-w-2xl w-full animate-fade-in mt-5 dark:bg-gray-900 dark:text-white">
+        <h2 className="text-3xl font-extrabold mb-6 text-center text-blue-700 dark:text-blue-300">Crear Peluquería</h2>
+        {mensaje && <p className="mb-4 text-center font-bold text-green-600 dark:text-green-400">{mensaje}</p>}
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input name="nombre" value={form.nombre} onChange={handleChange} placeholder="Nombre" className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" required />
-          <input name="direccion" value={form.direccion} onChange={handleChange} placeholder="Dirección" className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" required />
-          <input name="telefono" value={form.telefono} onChange={handleChange} placeholder="Teléfono" className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" required />
-          <textarea name="descripcion" value={form.descripcion} onChange={handleChange} placeholder="Descripción" className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400" required />
-
+          <input name="nombre" value={form.nombre} onChange={handleChange} placeholder="Nombre" className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400" required />
+          <input name="direccion" value={form.direccion} onChange={handleChange} placeholder="Dirección" className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400" required />
+          <input name="telefono" value={form.telefono} onChange={handleChange} placeholder="Teléfono" className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400" required />
+          <textarea name="descripcion" value={form.descripcion} onChange={handleChange} placeholder="Descripción" className="w-full border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400 dark:bg-gray-800 dark:text-white dark:placeholder-gray-400" required />
           {/* Imagen principal */}
           <div>
             <label className="font-bold">Imagen principal</label>

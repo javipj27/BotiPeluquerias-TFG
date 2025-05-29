@@ -11,9 +11,13 @@ export default function Carrito({ carrito, setCarrito }) {
   };
 
   const handleComprar = () => {
+    const token = localStorage.getItem("token");
     fetch("http://localhost:8000/api/pdf/compra", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: {
+        "Content-Type": "application/json",
+        "X-AUTH-TOKEN": token
+      },
       body: JSON.stringify({
         productos: carrito,
         total: carrito.reduce((acc, prod) => acc + (prod.precio || 0), 0)
@@ -34,7 +38,7 @@ export default function Carrito({ carrito, setCarrito }) {
   };
 
   return (
-    <div className="p-8 bg-gradient-to-br from-blue-700 via-cyan-400 to-orange-300 min-h-screen">
+    <div className="p-8  min-h-screen">
       <div className="max-w-2xl mx-auto bg-white/95 rounded-2xl shadow-2xl p-8 animate-fade-in">
         <h2 className="text-3xl font-extrabold text-center mb-8 text-blue-700 drop-shadow">Carrito de Compras</h2>
         {mensajeCompra && (
