@@ -12,7 +12,7 @@ export default function ListaProductos({ productos, theme, onProductoClick }) {
             <img
               src={producto.imagen}
               alt={producto.nombre}
-              className="w-16 h-16 object-cover rounded-lg"
+              className="w-16 h-16 object-contain rounded-lg"
             />
             <span className="font-bold">{producto.nombre}</span>
           </div>

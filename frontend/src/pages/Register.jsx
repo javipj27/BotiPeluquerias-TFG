@@ -34,18 +34,21 @@ export default function Register({ theme, setTheme }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className={`p-8 rounded-2xl shadow-2xl max-w-md w-full animate-fade-in flex flex-col
-        ${theme === "dark" ? "bg-white/95 text-gray-900" : "bg-gray-900 text-white"}`}>
-        <ThemeToggle theme={theme} setTheme={setTheme} />
-        <h2 className="text-3xl font-extrabold mb-6 text-center text--700">Registro</h2>
-        <RegisterForm onRegister={handleRegister} error={error} theme={theme} />
-        <p className={`mt-4 text-center ${theme === "dark" ? "text-gray-900" : "text-white"}`}>
-          ¿Ya tienes cuenta?{" "}
-          <a href="/login" className="text-blue-600 hover:underline">
-            Inicia sesión
-          </a>
-        </p>
+    <div className="min-h-screen flex items-center justify-center px-2 sm:px-0">
+  <div className={`p-4 sm:p-8 rounded-2xl shadow-2xl w-full max-w-xs sm:max-w-md md:max-w-lg animate-fade-in flex flex-col
+    ${theme === "dark" ? "bg-white/95 text-gray-900" : "bg-gray-900 text-white"}`}><ThemeToggle theme={theme} setTheme={setTheme} />
+<h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-6 text-center text--700">
+  Registro
+</h2>        <RegisterForm onRegister={handleRegister} error={error} theme={theme} />
+        <p className={`
+  mt-4 text-center text-sm sm:text-base md:text-lg
+  ${theme === "dark" ? "text-gray-900" : "text-white"}
+`}>
+  ¿Ya tienes cuenta?{" "}
+  <a href="/login" className="text-blue-600 hover:underline">
+    Inicia sesión
+  </a>
+</p>
       </div>
     </div>
   );

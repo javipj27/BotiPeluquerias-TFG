@@ -102,27 +102,29 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
   };
 
   return (
-    <div className={`p-8 min-h-screen ${theme === "dark"}`}>
-      <div className={`max-w-5xl mx-auto rounded-lg shadow-2xl overflow-hidden
-        ${theme === "dark" ? "bg-white text-gray-900" : "bg-gray-900 text-white"}`}>
-        {/* Header */}
+    <div className={`p-2 sm:p-8 min-h-screen ${theme === "dark"}`}>
+  <div className={`w-full max-w-xs sm:mt-5 mt-10 sm:max-w-2xl lg:max-w-5xl mx-auto rounded-lg shadow-2xl overflow-hidden
+    ${theme === "dark" ? "bg-white text-gray-900" : "bg-gray-900 text-white"}`}>
+
         <div className={`p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white`}>
-          <h2 className="text-4xl font-bold">{peluqueria.nombre}</h2>
-          <p className="mt-2">📍 {peluqueria.direccion}</p>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">{peluqueria.nombre}</h2>
+          <p className="mt-2 text-base sm:text-lg">📍 {peluqueria.direccion}</p>
           {weather && (
-            <div className="mt-2">
+            <div className="mt-2 text-sm sm:text-base">
               <span>🌡️ {weather.temperature}°C | 💨 {weather.windspeed} km/h</span>
             </div>
           )}
         </div>
 
         {/* Carrusel */}
-        <GaleriaPeluqueria
-          galeria={peluqueria.galeria}
-          slideIndex={slideIndex}
-          nextSlide={nextSlide}
-          prevSlide={prevSlide}
-        />
+        <div className="hidden sm:block">
+          <GaleriaPeluqueria
+            galeria={peluqueria.galeria}
+            slideIndex={slideIndex}
+            nextSlide={nextSlide}
+            prevSlide={prevSlide}
+          />
+        </div>
 
         {/* Información */}
         <div className={`p-6 ${theme === "dark" ? "bg-white/90 text-gray-900" : "bg-gray-900/90 text-white"}`}>

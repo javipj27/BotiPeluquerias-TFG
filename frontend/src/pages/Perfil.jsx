@@ -15,23 +15,25 @@ export default function Perfil({ theme }) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div
-        className={`p-8 rounded-2xl shadow-2xl max-w-md w-full animate-fade-in flex flex-col items-center
-          ${theme === "dark"
-            ? "bg-white/95 text-gray-900"
-            : "bg-gray-900 text-white"
-          }`}
+    <div className="min-h-screen flex items-center justify-center px-2 sm:px-0">
+  <div
+    className={`p-4 sm:p-8 rounded-2xl shadow-2xl w-full max-w-xs sm:max-w-md animate-fade-in flex flex-col items-center
+      ${theme === "dark"
+        ? "bg-white/95 text-gray-900"
+        : "bg-gray-900 text-white"
+      }`}
       >
         <img
           src="https://img.daisyui.com/images/profile/demo/spiderperson@192.webp"
           alt="avatar"
           className="w-24 h-24 rounded-full mb-4 border-4 border-blue-400"
         />
-        <h2 className="text-3xl font-extrabold mb-2 text-blue-700">Perfil de Usuario</h2>
-        <div className="text-lg mb-2"><b>Usuario:</b> {usuario.username}</div>
-        <div className="text-lg mb-2"><b>Email:</b> {usuario.email}</div>
-        <div className="text-lg mb-2"><b>Teléfono:</b> {usuario.telefono}</div>
+        <h2 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-2 text-blue-700">
+          Perfil de Usuario
+        </h2>        
+        <div className="text-base sm:text-lg mb-2"><b>Usuario:</b> {usuario.username}</div>
+        <div className="text-base sm:text-lg mb-2"><b>Email:</b> {usuario.email}</div>
+        <div className="text-base sm:text-lg mb-2"><b>Teléfono:</b> {usuario.telefono}</div>
       </div>
     </div>
   );

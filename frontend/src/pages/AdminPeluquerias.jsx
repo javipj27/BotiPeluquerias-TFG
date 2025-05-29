@@ -48,8 +48,10 @@ export default function AdminPeluquerias({theme}) {
      <div className="p-8 min-h-screen">
       <div className={`max-w-3xl mx-auto rounded-2xl shadow-2xl p-8 animate-fade-in
         ${theme === "dark" ? "bg-white/90 text-gray-900" : "bg-gray-900 text-white"}`}>
-        <h2 className="text-2xl font-bold mb-6 text-blue-700">Administración de Peluquerías</h2>
-        <div className="flex flex-wrap gap-4 mb-4">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-bold mb-6 text-blue-700">
+            Administración de Peluquerías
+          </h2>        
+          <div className="flex flex-wrap gap-4 mb-4">
           <button
             onClick={handleExport}
             className="px-4 py-2 rounded-full bg-gradient-to-r from-green-500 via-blue-500 to-cyan-400 text-white font-bold shadow hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-green-400"
@@ -74,7 +76,9 @@ export default function AdminPeluquerias({theme}) {
           </Link>
         </div>
         <div className="mt-8">
-          <h3 className="text-xl font-bold mb-4 text-blue-700">Listado de Peluquerías</h3>
+          <h3 className="text-lg sm:text-xl md:text-2xl font-bold mb-4 text-blue-700">
+            Listado de Peluquerías
+          </h3>          
           <AdminPeluqueriasLista peluquerias={peluquerias} theme={theme} onDelete={handleDelete} />
         </div>
       </div>

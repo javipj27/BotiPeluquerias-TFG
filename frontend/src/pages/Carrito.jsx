@@ -38,16 +38,22 @@ export default function Carrito({ carrito, setCarrito, theme }) {
   };
 
   return (
-    <div className="p-8 min-h-screen">
-      <div className={`max-w-2xl mx-auto mt-8 rounded-2xl shadow-2xl p-8 animate-fade-in
-        ${theme === "dark" ? "bg-white/95 text-gray-900" : "bg-gray-900 text-white"}`}>
-        <h2 className={`text-3xl font-extrabold text-center mb-8 drop-shadow
-          ${theme === "dark" ? "text-blue-700" : "text-blue-300"}`}>
+    <div className="p-2 sm:p-8 min-h-screen">
+  <div className={`w-full max-w-xs sm:max-w-lg lg:max-w-2xl mx-auto mt-8 rounded-2xl shadow-2xl p-4 sm:p-8 animate-fade-in
+    ${theme === "dark" ? "bg-white/95 text-gray-900" : "bg-gray-900 text-white"}`}>
+        <h2 className={`
+          text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-8 drop-shadow
+          ${theme === "dark" ? "text-gray-900" : "text-blue-300"}
+        `}>
           Carrito de Compras
         </h2>
         {mensajeCompra && (
-          <p className={`text-center font-bold mb-4
-            ${theme === "dark" ? "text-green-600" : "text-green-400"}`}>{mensajeCompra}</p>
+          <p className={`
+            text-center font-bold mb-4 text-sm sm:text-base md:text-lg
+            ${theme === "dark" ? "text-green-600" : "text-green-400"}
+          `}>
+            {mensajeCompra}
+          </p>
         )}
         <CarritoLista carrito={carrito} theme={theme} onEliminar={handleEliminarProducto} />
         {carrito.length > 0 && (

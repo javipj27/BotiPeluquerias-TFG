@@ -29,15 +29,20 @@ export default function Peluquerias({theme}) {
   }
 
   return (
-    <div className="p-8 min-h-screen">
-      <h2 className={`text-4xl font-extrabold text-center mb-10 mt-7 drop-shadow animate-fade-in ${theme === "dark" ? "text-white" : "text-black"}`}>
-        Nuestras Peluquerías
-      </h2>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-        {peluquerias.map((p, idx) => (
-          <PeluqueriaCard key={p.id} peluqueria={p} theme={theme} idx={idx} />
-        ))}
+    <div className="p-2 sm:p-8 min-h-screen">
+  <h2 className={`
+  text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-10 mt-7 drop-shadow animate-fade-in
+  ${theme === "dark" ? "text-white" : "text-black"}
+`}>
+  Nuestras Peluquerías
+</h2>
+  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-10">
+    {peluquerias.map((p, idx) => (
+      <div className="mb-4">
+        <PeluqueriaCard key={p.id} peluqueria={p} theme={theme} idx={idx} />
       </div>
-    </div>
+    ))}
+  </div>
+</div>
   );
 }
