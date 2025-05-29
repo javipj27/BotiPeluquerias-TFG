@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LoginForm from "../components/LoginForm";
+import ThemeToggle from "../components/ThemeToggle";
 
-export default function Login() {
-  const [emailOrUsername, setEmailOrUsername] = useState("");
-  const [password, setPassword] = useState("");
+export default function Login({ theme, setTheme }) {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  const handleLogin = async ({ emailOrUsername, password }) => {
     setError("");
     try {
       const res = await fetch("http://localhost:8000/api/login", {
@@ -22,11 +21,12 @@ export default function Login() {
         return;
       }
       localStorage.setItem("isAuthenticated", "true");
-      localStorage.setItem("username", emailOrUsername);
+      localStorage.setItem("username", data.username || emailOrUsername);
       localStorage.setItem("token", data.token);
-      localStorage.setItem("roles", JSON.stringify(data.roles)); 
+      localStorage.setItem("roles", JSON.stringify(data.roles));
+      localStorage.setItem("email", data.email || "");
+      localStorage.setItem("telefono", data.telefono || "");
       window.dispatchEvent(new Event("authChanged"));
-
       navigate("/");
     } catch (err) {
       setError("Error de red o del servidor");
@@ -35,40 +35,12 @@ export default function Login() {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="bg-white/95 p-8 rounded-2xl shadow-2xl max-w-md w-full animate-fade-in text-gray-900">
-        <h2 className="text-3xl font-extrabold mb-6 text-center text-blue-700">Iniciar Sesión</h2>
-        {error && <p className="text-error text-center mb-4">{error}</p>}
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="block font-bold mb-1 text-gray-900">Email o nombre de usuario</label>
-            <input
-              type="text"
-              value={emailOrUsername}
-              onChange={(e) => setEmailOrUsername(e.target.value)}
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-gray-900"
-              placeholder="Ingresa tu email o nombre de usuario"
-              required
-            />
-          </div>
-          <div>
-            <label className="block font-bold mb-1 text-gray-900">Contraseña</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary text-gray-900"
-              placeholder="Ingresa tu contraseña"
-              required
-            />
-          </div>
-          <button
-            type="submit"
-            className="w-full px-4 py-2 rounded-full bg-gradient-to-r from-orange-400 via-green-400 to-blue-500 text-white font-bold shadow-lg hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-blue-400"
-          >
-            Iniciar Sesión
-          </button>
-        </form>
-        <p className="mt-4 text-center text-gray-900">
+      <div className={`p-8 rounded-2xl shadow-2xl max-w-md w-full animate-fade-in flex flex-col
+        ${theme === "dark" ? "bg-white/95 text-gray-900" : "bg-gray-900 text-white"}`}>
+        <ThemeToggle theme={theme} setTheme={setTheme} />
+        <h2 className="text-3xl font-extrabold mb-6 text-center text-white-700 ">Iniciar Sesión</h2>
+        <LoginForm onLogin={handleLogin} error={error} theme={theme} />
+        <p className={`mt-4 text-center ${theme === "dark" ? "text-gray-900" : "text-white"}`}>
           ¿No tienes cuenta?{" "}
           <a href="/register" className="text-accent hover:underline">
             Regístrate

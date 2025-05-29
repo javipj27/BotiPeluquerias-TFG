@@ -1,8 +1,9 @@
 import React, { useRef, useEffect, useState } from "react";
 import { getPeluquerias } from "../api/peluquerias";
 import { Link } from "react-router-dom";
+import AdminPeluqueriasLista from "../components/AdminPeluqueriasLista";
 
-export default function AdminPeluquerias() {
+export default function AdminPeluquerias({theme}) {
   const fileInputRef = useRef();
   const [peluquerias, setPeluquerias] = useState([]);
 
@@ -44,8 +45,9 @@ export default function AdminPeluquerias() {
   };
 
   return (
-    <div className="p-8 min-h-screen">
-      <div className="max-w-3xl mx-auto bg-white/95 rounded-2xl shadow-2xl p-8 animate-fade-in">
+     <div className="p-8 min-h-screen">
+      <div className={`max-w-3xl mx-auto rounded-2xl shadow-2xl p-8 animate-fade-in
+        ${theme === "dark" ? "bg-white/90 text-gray-900" : "bg-gray-900 text-white"}`}>
         <h2 className="text-2xl font-bold mb-6 text-blue-700">Administración de Peluquerías</h2>
         <div className="flex flex-wrap gap-4 mb-4">
           <button
@@ -73,19 +75,7 @@ export default function AdminPeluquerias() {
         </div>
         <div className="mt-8">
           <h3 className="text-xl font-bold mb-4 text-blue-700">Listado de Peluquerías</h3>
-          <ul>
-            {peluquerias.map(p => (
-              <li key={p.id} className="flex justify-between items-center border-b py-2">
-                <span className="text-gray-800">{p.nombre}</span>
-                <button
-                  onClick={() => handleDelete(p.id)}
-                  className="px-3 py-1 rounded-full bg-gradient-to-r from-red-500 via-pink-500 to-orange-400 text-white font-bold shadow hover:scale-110 transition focus:outline-none focus:ring-2 focus:ring-red-400"
-                >
-                  Borrar
-                </button>
-              </li>
-            ))}
-          </ul>
+          <AdminPeluqueriasLista peluquerias={peluquerias} theme={theme} onDelete={handleDelete} />
         </div>
       </div>
     </div>

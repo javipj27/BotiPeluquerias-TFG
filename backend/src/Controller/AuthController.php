@@ -54,7 +54,10 @@ class AuthController extends AbstractController
 
         return $this->json([
             'token' => $usuario->getApiToken(),
-            'roles' => $usuario->getRoles()
+            'roles' => $usuario->getRoles(),
+            'email' => $usuario->getEmail(),
+            'telefono' => $usuario->getTelefono(),
+            'username' => $usuario->getUsernameField(),
         ]);
     }
 
@@ -92,7 +95,10 @@ class AuthController extends AbstractController
 
         return $this->json([
             'token' => $usuario->getApiToken(),
-            'roles' => $usuario->getRoles()
+            'roles' => $usuario->getRoles(),
+            'email' => $usuario->getEmail(),
+            'telefono' => $usuario->getTelefono(),
+            'username' => $usuario->getUsernameField(),
         ]);
     }
 }

@@ -10,6 +10,12 @@
 .bg-black {
   background-color: #000000; 
 }
+html,body{
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
 
 /* Nuevos estilos */
 body {
@@ -44,12 +50,22 @@ body {
   background-image: url('../src/assets/bg-peluqueria-clara.jpg');
   background-size: cover;
   background-position: center;
-  width: 100%;
-  height: 100%;
+  background-repeat: no-repeat;
+  min-height: 100vh;
 }
 .bg-peluqueria-oscura {
   background-image: url('../src/assets/bg-peluqueria-ocsura.jpg');
   background-size: cover;
   background-position: center;
   color: white;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+}
+
+@keyframes spin-slow {
+  0% { transform: rotate(0deg);}
+  100% { transform: rotate(360deg);}
+}
+.animate-spin-slow {
+  animation: spin-slow 2.5s linear infinite;
 }

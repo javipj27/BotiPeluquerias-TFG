@@ -1,13 +1,16 @@
 import { Link } from "react-router-dom";
+import HomeCard from "../components/HomeCard";
 
-export default function Home() {
+export default function Home({ theme }) {
   return (
     <div className="min-h-screen flex items-center justify-center ">
-  <div className="bg-white/90 p-10 rounded-3xl shadow-2xl max-w-2xl w-full animate-fade-in text-center">
-        <h1 className="text-4xl font-extrabold  text-blue-700 drop-shadow mb-4">
-          Bienvenido a BotiPeluquerías
+      <div className={`p-10 rounded-3xl shadow-2xl max-w-2xl w-full animate-fade-in text-center
+        ${theme === "dark" ? "bg-white/90 text-gray-900" : "bg-gray-900 text-white"}`}>
+        <h1 className={`text-4xl font-extrabold drop-shadow mb-4 ${
+          theme === "dark" ? "text-gray-900" : "text-white"
+        }`}>Bienvenido a BotiPeluquerías
         </h1>
-        <p className="mt-2 text-gray-700 text-lg mb-8">
+        <p className={`mt-2 text-lg mb-8 ${theme === "dark" ? "text-gray-700" : "text-gray-200"}`}>
           Reserva tu cita online en cualquiera de nuestras peluquerías y descubre nuestros productos exclusivos.
         </p>
         <div className="flex flex-col md:flex-row justify-center gap-6 mb-8">
@@ -24,18 +27,7 @@ export default function Home() {
             Ir al Carrito
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8 ">
-          <div className="bg-blue-100 rounded-xl p-6 shadow flex flex-col items-center animate-fade-in">
-            <span className="text-4xl mb-2">💇‍♂️</span>
-            <h3 className="font-bold text-blue-700 mb-1">Reserva fácil</h3>
-            <p className="text-gray-600 text-sm">Elige tu peluquería, peluquero y horario en segundos.</p>
-          </div>
-          <div className="bg-orange-100 rounded-xl p-6 shadow flex flex-col items-center animate-fade-in">
-            <span className="text-4xl mb-2">🛒</span>
-            <h3 className="font-bold text-orange-600 mb-1">Compra productos</h3>
-            <p className="text-gray-600 text-sm">Añade productos exclusivos a tu carrito y recíbelos en tu cita.</p>
-          </div>
-        </div>
+        <HomeCard theme={theme} />
       </div>
     </div>
   );
