@@ -70,9 +70,27 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
     return horarios;
   };
 
-  const handleReserva = (e) => {
+  const handleReserva = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
+    const fechaHora = `${new Date().toISOString().split("T")[0]} ${horarioSeleccionado}:00`;
+
+    // 1. Guardar la cita en el backend
+    await fetch("http://localhost:8000/api/citas", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-AUTH-TOKEN": token
+      },
+      body: JSON.stringify({
+        peluqueria: peluqueria.nombre,
+        peluquero: peluqueroSeleccionado,
+        fechaHora,
+        nombreCliente
+      })
+    });
+
+    // 2. Descargar el PDF como antes
     fetch("http://localhost:8000/api/pdf/cita", {
       method: "POST",
       headers: {
@@ -95,6 +113,7 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
         a.click();
         window.URL.revokeObjectURL(url);
       });
+
     setMostrarFormulario(false);
     setNombreCliente("");
     setPeluqueroSeleccionado("");
@@ -103,8 +122,8 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
 
   return (
     <div className={`p-2 sm:p-8 min-h-screen ${theme === "dark"}`}>
-  <div className={`w-full max-w-xs sm:mt-5 mt-10 sm:max-w-2xl lg:max-w-5xl mx-auto rounded-lg shadow-2xl overflow-hidden
-    ${theme === "dark" ? "bg-white text-gray-900" : "bg-gray-900 text-white"}`}>
+      <div className={`w-full max-w-xs sm:mt-5 mt-10 sm:max-w-2xl lg:max-w-5xl mx-auto rounded-lg shadow-2xl overflow-hidden
+        ${theme === "dark" ? "bg-white text-gray-900" : "bg-gray-900 text-white"}`}>
 
         <div className={`p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white`}>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">{peluqueria.nombre}</h2>

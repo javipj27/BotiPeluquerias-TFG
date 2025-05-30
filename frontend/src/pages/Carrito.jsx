@@ -10,8 +10,24 @@ export default function Carrito({ carrito, setCarrito, theme }) {
     setCarrito(nuevoCarrito);
   };
 
-  const handleComprar = () => {
+  const handleComprar = async () => {
     const token = localStorage.getItem("token");
+    const total = carrito.reduce((acc, prod) => acc + (parseFloat(prod.precio) || 0), 0);
+
+    // 1. Guardar la compra en el backend
+    await fetch("http://localhost:8000/api/compras", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-AUTH-TOKEN": token
+      },
+      body: JSON.stringify({
+        productos: carrito,
+        total
+      })
+    });
+
+    // 2. Descargar el PDF como antes
     fetch("http://localhost:8000/api/pdf/compra", {
       method: "POST",
       headers: {
@@ -20,7 +36,7 @@ export default function Carrito({ carrito, setCarrito, theme }) {
       },
       body: JSON.stringify({
         productos: carrito,
-        total: carrito.reduce((acc, prod) => acc + (prod.precio || 0), 0)
+        total
       })
     })
       .then(res => res.blob())
@@ -39,8 +55,8 @@ export default function Carrito({ carrito, setCarrito, theme }) {
 
   return (
     <div className="p-2 sm:p-8 min-h-screen">
-  <div className={`w-full max-w-xs sm:max-w-lg lg:max-w-2xl mx-auto mt-8 rounded-2xl shadow-2xl p-4 sm:p-8 animate-fade-in
-    ${theme === "dark" ? "bg-white/95 text-gray-900" : "bg-gray-900 text-white"}`}>
+      <div className={`w-full max-w-xs sm:max-w-lg lg:max-w-2xl mx-auto mt-8 rounded-2xl shadow-2xl p-4 sm:p-8 animate-fade-in
+        ${theme === "dark" ? "bg-white/95 text-gray-900" : "bg-gray-900 text-white"}`}>
         <h2 className={`
           text-2xl sm:text-3xl md:text-4xl font-extrabold text-center mb-8 drop-shadow
           ${theme === "dark" ? "text-gray-900" : "text-blue-300"}

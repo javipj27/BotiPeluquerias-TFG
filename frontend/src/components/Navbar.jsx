@@ -1,7 +1,7 @@
 import { Link, useLocation } from "react-router-dom";
 import { useState } from "react";
 
-export default function Navbar({ carritoCount, isAuthenticated, isAdmin, onLogout, theme, setTheme }) {
+export default function Navbar({ carritoCount, isAuthenticated, isAdmin, onLogout, theme, setTheme, avatar }) {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -196,11 +196,14 @@ export default function Navbar({ carritoCount, isAuthenticated, isAdmin, onLogou
             <div className="dropdown dropdown-end">
               <div tabIndex={0} role="button" className="avatar cursor-pointer">
                 <div className="ring-primary ring-offset-base-100 w-10 rounded-full ring-2 ring-offset-2">
-                  <img src="https://img.daisyui.com/images/profile/demo/spiderperson@192.webp" alt="avatar" />
+                  <img src={avatar} alt="avatar" onError={e => { e.target.onerror = null;      e.target.src = "https://img.daisyui.com/images/profile/demo/spiderperson@192.webp";
+  }} />
                 </div>
               </div>
               <ul tabIndex={0} className="dropdown-content text-black dark:text-white menu bg-base-100 rounded-box z-10 w-52 p-2 shadow-sm">
                 <li><a href="/perfil">Perfil</a></li>
+                <li><a href="/historial-compras">Historial de compras</a></li>
+                <li><a href="/historial-citas">Historial de citas</a></li>
                 {isAdmin && (
                   <li>
                     <a href="/admin/peluquerias">Administración</a>

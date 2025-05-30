@@ -12,6 +12,8 @@ import Perfil from "./pages/Perfil";
 import Layout from "./components/Layout";
 import { PrivateRoute, AdminRoute } from "./components/ProtectedRoutes";
 import './index.css';
+import HistorialCompras from "./pages/HistorialCompras";
+import HistorialCitas from "./pages/HistorialCitas";
 
 export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
@@ -31,6 +33,10 @@ export default function App() {
   const [isAdmin, setIsAdmin] = useState(
     JSON.parse(localStorage.getItem("roles") || "[]").includes("ROLE_ADMIN")
   );
+  const [avatar, setAvatar] = useState(() =>
+    localStorage.getItem("fotoPerfil") ||
+    "https://img.daisyui.com/images/profile/demo/spiderperson@192.webp"
+  );
 
   // Sincroniza el carrito con localStorage cada vez que cambie
   useEffect(() => {
@@ -44,6 +50,10 @@ export default function App() {
       // Sincroniza el carrito si cambia en otra pestaña
       const guardado = localStorage.getItem("carrito");
       setCarrito(guardado ? JSON.parse(guardado) : []);
+      setAvatar(
+        localStorage.getItem("fotoPerfil") ||
+        "https://img.daisyui.com/images/profile/demo/spiderperson@192.webp"
+      );
     };
     window.addEventListener("storage", syncAuth);
     window.addEventListener("authChanged", syncAuth);
@@ -59,9 +69,11 @@ export default function App() {
     localStorage.removeItem("token");
     localStorage.removeItem("roles");
     localStorage.removeItem("carrito");
+    localStorage.removeItem("fotoPerfil");
     setIsAuthenticated(false);
     setIsAdmin(false);
     setCarrito([]);
+    setAvatar("https://img.daisyui.com/images/profile/demo/spiderperson@192.webp");
     window.dispatchEvent(new Event("authChanged"));
     window.location.href = "/login";
   };
@@ -75,6 +87,7 @@ export default function App() {
         onLogout={handleLogout}
         theme={theme}
         setTheme={setTheme}
+        avatar={avatar}
       >
         <Routes>
           <Route path="/login" element={<Login theme={theme} setTheme={setTheme} />} />
@@ -132,6 +145,22 @@ export default function App() {
             element={
               <PrivateRoute>
                 <Perfil theme={theme} />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/historial-compras"
+            element={
+              <PrivateRoute>
+                <HistorialCompras theme={theme} />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/historial-citas"
+            element={
+              <PrivateRoute>
+                <HistorialCitas theme={theme} />
               </PrivateRoute>
             }
           />
