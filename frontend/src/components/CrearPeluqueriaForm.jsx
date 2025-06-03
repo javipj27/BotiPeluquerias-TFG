@@ -46,7 +46,7 @@ export default function CrearPeluqueriaForm({ theme, onSuccess }) {
     formData.append("file", file);
 
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:8000/upload", {
+    const res = await fetch("/upload", {
       method: "POST",
       headers: {
         "X-AUTH-TOKEN": token
@@ -72,7 +72,7 @@ export default function CrearPeluqueriaForm({ theme, onSuccess }) {
   const handleSubmit = async e => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:8000/api/peluquerias", {
+    const res = await fetch("/api/peluquerias", {
       method: "POST",
       headers: {
         "Content-Type": "application/ld+json",

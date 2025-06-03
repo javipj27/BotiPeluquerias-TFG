@@ -20,14 +20,14 @@ export default function Perfil({ theme }) {
     const formData = new FormData();
     formData.append("file", file);
     const token = localStorage.getItem("token");
-    const res = await fetch("http://localhost:8000/upload", {
+    const res = await fetch("/upload", {
       method: "POST",
       headers: { "X-AUTH-TOKEN": token },
       body: formData,
     });
     const data = await res.json();
     if (data.url) {
-      await fetch("http://localhost:8000/api/usuario/avatar", {
+      await fetch("/api/usuario/avatar", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

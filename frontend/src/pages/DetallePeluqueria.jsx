@@ -27,7 +27,7 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
         productos: data.productos || [],
       });
       const token = localStorage.getItem("token");
-      fetch("http://localhost:8000/api/weather", {
+      fetch("/api/weather", {
         headers: { "X-AUTH-TOKEN": token }
       })
         .then(res => res.json())
@@ -76,7 +76,7 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
     const fechaHora = `${new Date().toISOString().split("T")[0]} ${horarioSeleccionado}:00`;
 
     // 1. Guardar la cita en el backend
-    await fetch("http://localhost:8000/api/citas", {
+    await fetch("/api/citas", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -91,7 +91,7 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
     });
 
     // 2. Descargar el PDF como antes
-    fetch("http://localhost:8000/api/pdf/cita", {
+    fetch("/api/pdf/cita", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

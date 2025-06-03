@@ -11,6 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\String\ByteString;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpKernel\Log\Logger;
 
 class AuthController extends AbstractController
 {
@@ -19,7 +21,9 @@ class AuthController extends AbstractController
         Request $request,
         EntityManagerInterface $em,
         UserPasswordHasherInterface $passwordHasher,
-        UsuarioRepository $usuarioRepository
+        UsuarioRepository $usuarioRepository,
+        LoggerInterface $logger 
+
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
 
@@ -29,14 +33,17 @@ class AuthController extends AbstractController
             !isset($data['username']) ||
             !isset($data['nombre'])
         ) {
+            $logger->warning('Registro fallido: faltan campos');
             return $this->json(['error' => 'Faltan campos obligatorios'], 400);
         }
 
         // Comprobar si el email o username ya existen
         if ($usuarioRepository->findOneBy(['email' => $data['email']])) {
+            $logger->warning('Registro fallido: email ya registrado', ['email' => $data['email']]);
             return $this->json(['error' => 'El email ya está registrado'], 409);
         }
         if ($usuarioRepository->findOneBy(['username' => $data['username']])) {
+            $logger->warning('Registro fallido: username ya registrado', ['username' => $data['username']]);
             return $this->json(['error' => 'El nombre de usuario ya está registrado'], 409);
         }
 
@@ -52,6 +59,7 @@ class AuthController extends AbstractController
         $em->persist($usuario);
         $em->flush();
 
+        $logger->info('Usuario registrado correctamente', ['email' => $usuario->getEmail()]);
         return $this->json([
             'token' => $usuario->getApiToken(),
             'roles' => $usuario->getRoles(),
@@ -66,17 +74,22 @@ class AuthController extends AbstractController
         Request $request,
         UsuarioRepository $usuarioRepository,
         UserPasswordHasherInterface $passwordHasher,
-        EntityManagerInterface $em
+        EntityManagerInterface $em,
+        LoggerInterface $logger
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
 
+        $logger->info('Intento de login', ['email' => $data['email'] ?? null]);
+
         if (!isset($data['email']) || !isset($data['password'])) {
+            $logger->warning('Login fallido: faltan datos');
             return $this->json(['error' => 'Email o nombre de usuario y contraseña son obligatorios'], 400);
         }
 
         // Buscar por email o username
         $usuario = $usuarioRepository->findOneBy(['email' => $data['email']]);
         if (!$usuario) {
+                $logger->warning('Login fallido: usuario no encontrado', ['email' => $data['email']]);
             $usuario = $usuarioRepository->findOneBy(['username' => $data['email']]);
         }
         if (!$usuario) {
@@ -84,6 +97,7 @@ class AuthController extends AbstractController
         }
 
         if (!$passwordHasher->isPasswordValid($usuario, $data['password'])) {
+            $logger->warning('Login fallido: contraseña incorrecta', ['email' => $data['email']]);
             return $this->json(['error' => 'Credenciales incorrectas'], 401);
         }
 
@@ -93,6 +107,7 @@ class AuthController extends AbstractController
             $em->flush();
         }
 
+        $logger->info('Login correcto', ['email' => $usuario->getEmail()]);
         return $this->json([
             'token' => $usuario->getApiToken(),
             'roles' => $usuario->getRoles(),

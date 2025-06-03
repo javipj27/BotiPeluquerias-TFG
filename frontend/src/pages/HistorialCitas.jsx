@@ -6,7 +6,7 @@ export default function HistorialCitas({ theme }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:8000/api/citas", {
+    fetch("/api/citas", {
       headers: { "X-AUTH-TOKEN": token }
     })
       .then(res => res.json())

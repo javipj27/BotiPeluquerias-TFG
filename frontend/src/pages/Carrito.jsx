@@ -15,7 +15,7 @@ export default function Carrito({ carrito, setCarrito, theme }) {
     const total = carrito.reduce((acc, prod) => acc + (parseFloat(prod.precio) || 0), 0);
 
     // 1. Guardar la compra en el backend
-    await fetch("http://localhost:8000/api/compras", {
+    await fetch("/api/compras", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -28,7 +28,7 @@ export default function Carrito({ carrito, setCarrito, theme }) {
     });
 
     // 2. Descargar el PDF como antes
-    fetch("http://localhost:8000/api/pdf/compra", {
+    fetch("/api/pdf/compra", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

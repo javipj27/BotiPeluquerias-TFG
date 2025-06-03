@@ -10,15 +10,19 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
+use Psr\Log\LoggerInterface;
+
+
 
 class CitaController extends AbstractController
 {
     #[Route('/api/citas', name: 'api_citas_usuario', methods: ['GET'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function historialCitas(CitaRepository $citaRepository): JsonResponse
+    public function historialCitas(CitaRepository $citaRepository,LoggerInterface $logger): JsonResponse
     {
         /** @var \App\Entity\Usuario $usuario */
         $usuario = $this->getUser();
+        $logger->info('Consulta de historial de citas', ['usuario_id' => $usuario->getId()]);
         $citas = $citaRepository->findByUsuarioId($usuario->getId());
 
         $data = [];
@@ -36,13 +40,16 @@ class CitaController extends AbstractController
 
     #[Route('/api/citas', name: 'api_citas_create', methods: ['POST'])]
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
-    public function crearCita(Request $request, EntityManagerInterface $em): JsonResponse
+    public function crearCita(Request $request, EntityManagerInterface $em,LoggerInterface $logger): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
         /** @var \App\Entity\Usuario $usuario */
         $usuario = $this->getUser();
+        $logger->info('Intento de crear cita', ['usuario_id' => $usuario->getId()]);
+
 
         if (!isset($data['peluqueria'], $data['peluquero'], $data['fechaHora'], $data['nombreCliente'])) {
+            $logger->warning('Creación de cita fallida: faltan datos');
             return $this->json(['error' => 'Faltan datos'], 400);
         }
 
@@ -56,6 +63,7 @@ class CitaController extends AbstractController
         $em->persist($cita);
         $em->flush();
 
+        $logger->info('Cita creada correctamente', ['cita_id' => $cita->getId()]);
         return $this->json(['success' => true, 'id' => $cita->getId()]);
     }
 }

@@ -8,13 +8,16 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
+use Psr\Log\LoggerInterface;
+
 
 class PdfController extends AbstractController
 {
     #[Route('/api/pdf/cita', name: 'pdf_cita', methods: ['POST'])]
-    public function citaPdf(Request $request): Response
+    public function citaPdf(Request $request,LoggerInterface $logger): Response
     {
         $data = json_decode($request->getContent(), true);
+        $logger->info('Generación de PDF de cita', ['nombre' => $data['nombre'] ?? null]);
 
         $html = $this->renderView('pdf/cita.html.twig', [
             'nombre' => $data['nombre'],
@@ -41,9 +44,10 @@ class PdfController extends AbstractController
     }
 
     #[Route('/api/pdf/compra', name: 'pdf_compra', methods: ['POST'])]
-    public function compraPdf(Request $request): Response
+    public function compraPdf(Request $request,LoggerInterface $logger): Response
     {
         $data = json_decode($request->getContent(), true);
+        $logger->info('Generación de PDF de compra');
 
         $html = $this->renderView('pdf/compra.html.twig', [
             'productos' => $data['productos'],

@@ -9,12 +9,15 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Psr\Log\LoggerInterface;
+
 
 class PeluqueriaImportExportController extends AbstractController
 {
     #[Route('/api/peluquerias/export', name: 'peluquerias_export', methods: ['GET'])]
-    public function export(PeluqueriaRepository $repo): Response
+    public function export(PeluqueriaRepository $repo,LoggerInterface $logger): Response
     {
+        $logger->info('Exportación de peluquerías');
         $peluquerias = $repo->findAll();
         $data = [];
         foreach ($peluquerias as $p) {
@@ -42,10 +45,12 @@ class PeluqueriaImportExportController extends AbstractController
     }
 
     #[Route('/api/peluquerias/import', name: 'peluquerias_import', methods: ['POST'])]
-    public function import(Request $request, EntityManagerInterface $em): JsonResponse
+    public function import(Request $request, EntityManagerInterface $em,LoggerInterface $logger): JsonResponse
     {
+        $logger->info('Importación de peluquerías');
         $data = json_decode($request->getContent(), true);
         if (!is_array($data)) {
+            $logger->warning('Importación fallida: formato inválido');
             return $this->json(['error' => 'Formato inválido'], 400);
         }
         foreach ($data as $item) {
@@ -62,6 +67,7 @@ class PeluqueriaImportExportController extends AbstractController
             $em->persist($peluqueria);
         }
         $em->flush();
+        $logger->info('Importación completada');
         return $this->json(['success' => true]);
     }
 }

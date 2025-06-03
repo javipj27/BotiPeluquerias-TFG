@@ -15,29 +15,51 @@ export default function AdminPeluquerias({theme}) {
     });
   }, []);
 
-  const handleExport = () => {
-    window.open("http://localhost:8000/api/peluquerias/export", "_blank");
-  };
+  const handleExport = async () => {
+  const token = localStorage.getItem("token");
+  const response = await fetch("/api/peluquerias/export", {
+    headers: {
+      "X-AUTH-TOKEN": token
+    }
+  });
+  if (!response.ok) {
+    alert("Error al exportar: " + response.statusText);
+    return;
+  }
+  const blob = await response.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "peluquerias_export.json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+};
 
   const handleImport = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = async (evt) => {
-      await fetch("http://localhost:8000/api/peluquerias/import", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: evt.target.result,
-      });
-      window.location.reload();
-    };
-    reader.readAsText(file);
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async (evt) => {
+    const token = localStorage.getItem("token");
+    await fetch("/api/peluquerias/import", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-AUTH-TOKEN": token
+      },
+      body: evt.target.result,
+    });
+    window.location.reload();
   };
+  reader.readAsText(file);
+};
 
   const handleDelete = async (id) => {
     const token = localStorage.getItem("token");
     if (!window.confirm("¿Seguro que quieres borrar esta peluquería?")) return;
-    await fetch(`http://localhost:8000/api/peluquerias/${id}`, {
+    await fetch(`/api/peluquerias/${id}`, {
       method: "DELETE",
       headers: { "X-AUTH-TOKEN": token }
     });

@@ -6,7 +6,7 @@ export default function HistorialCompras({ theme }) {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    fetch("http://localhost:8000/api/compras", {
+    fetch("/api/compras", {
       headers: { "X-AUTH-TOKEN": token }
     })
       .then(res => res.json())

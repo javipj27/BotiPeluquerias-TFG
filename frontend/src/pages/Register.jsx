@@ -10,7 +10,7 @@ export default function Register({ theme, setTheme }) {
   const handleRegister = async ({ email, username, nombre, telefono, password }) => {
     setError("");
     try {
-      const res = await fetch("http://localhost:8000/api/register", {
+      const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password, username, nombre, telefono }),
