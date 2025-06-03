@@ -3,15 +3,17 @@ provider "aws" {
 }
 
 resource "aws_instance" "botipeluquerias" {
-  ami           = "ami-0f9de6e2d2f067fca"
-  instance_type = "t2.micro"
-  key_name      = "BotiPeluquerias" 
+  ami                    = "ami-0f9de6e2d2f067fca"  # Ubuntu 22.04 LTS (por ejemplo)
+  instance_type          = "t2.micro"
+  key_name               = "BotiPeluquerias"
   vpc_security_group_ids = ["sg-01e62c8f8b15e47f1"]
-  subnet_id     = "subnet-0ff43c912c80b8f20"
+  subnet_id              = "subnet-0ff43c912c80b8f20"
 
+  # Subida del código fuente al servidor
   provisioner "file" {
     source      = "C:/Users/javip/Documents/BotiPeluquerias-TFG"
     destination = "/home/ubuntu/BotiPeluquerias-TFG"
+
     connection {
       type        = "ssh"
       user        = "ubuntu"
@@ -20,13 +22,36 @@ resource "aws_instance" "botipeluquerias" {
     }
   }
 
+  # Instalación de dependencias y despliegue con Docker
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get update",
-      "sudo apt-get install -y docker.io docker-compose",
+      "sudo apt-get install -y ca-certificates curl gnupg lsb-release",
+
+      # Docker GPG Key
+      "sudo mkdir -p /etc/apt/keyrings",
+      "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg",
+
+      # Docker repo
+      "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
+
+      "sudo apt-get update",
+
+      # Instalar Docker y Compose plugin moderno
+      "sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin",
+
+      # Iniciar y habilitar Docker
+      "sudo systemctl start docker",
+      "sudo systemctl enable docker",
+
+      # Cambiar al directorio y levantar los contenedores
       "cd /home/ubuntu/BotiPeluquerias-TFG",
-      "sudo docker-compose up -d"
+      "sudo docker compose up -d",
+
+      # Marcar finalización para depurar
+      "echo 'Provisioning completed' > /home/ubuntu/provisioning_log.txt"
     ]
+
     connection {
       type        = "ssh"
       user        = "ubuntu"
