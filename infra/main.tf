@@ -44,9 +44,16 @@ resource "aws_instance" "botipeluquerias" {
       "sudo systemctl start docker",
       "sudo systemctl enable docker",
 
+      
+
       # Cambiar al directorio y levantar los contenedores
       "cd /home/ubuntu/BotiPeluquerias-TFG",
       "sudo docker compose up -d",
+
+      # Esperar a que MySQL esté listo y restaurar el dump
+      "sleep 15",
+      "sudo docker cp infra/dump.sql botipeluquerias-tfg-db-1:/dump.sql",
+      "sudo docker exec botipeluquerias-tfg-db-1 sh -c 'mysql -u root -proot BotiPeluquerias < /dump.sql'",
 
       # Marcar finalización para depurar
       "echo 'Provisioning completed' > /home/ubuntu/provisioning_log.txt"
