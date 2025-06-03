@@ -10,7 +10,7 @@ resource "aws_instance" "botipeluquerias" {
   subnet_id     = "subnet-0ff43c912c80b8f20"
 
   provisioner "file" {
-    source      = "C:/Users/javip/Documents/BotiPeluquerias-TFG-dockers-nginx"
+    source      = "C:/Users/javip/Documents/BotiPeluquerias-TFG"
     destination = "/home/ubuntu/BotiPeluquerias-TFG"
     connection {
       type        = "ssh"
