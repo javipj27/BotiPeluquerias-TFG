@@ -34,8 +34,7 @@ export default function App() {
     JSON.parse(localStorage.getItem("roles") || "[]").includes("ROLE_ADMIN")
   );
   const [avatar, setAvatar] = useState(() =>
-    localStorage.getItem("fotoPerfil") ||
-    "https://img.daisyui.com/images/profile/demo/spiderperson@192.webp"
+    localStorage.getItem("fotoPerfil") 
   );
 
   // Sincroniza el carrito con localStorage cada vez que cambie

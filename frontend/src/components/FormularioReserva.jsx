@@ -8,7 +8,8 @@ export default function FormularioReserva({
   setHorarioSeleccionado,
   peluqueros,
   generarHorarios,
-  onSubmit
+  onSubmit,
+  horariosOcupados = []
 }) {
   return (
     <form className={`mt-6 p-6 rounded-lg shadow-md space-y-4 ${theme === "dark" ? "bg-gray-100 text-gray-900" : "bg-gray-800 text-white"}`} onSubmit={onSubmit}>
@@ -52,8 +53,11 @@ export default function FormularioReserva({
                 onChange={() => setHorarioSeleccionado(hora)}
                 className="form-radio"
                 required
+                disabled={horariosOcupados.includes(hora)}
               />
-              <span>{hora}</span>
+              <span>
+                {hora} {horariosOcupados.includes(hora) && "(Ocupado)"}
+              </span>
             </label>
           ))}
         </div>

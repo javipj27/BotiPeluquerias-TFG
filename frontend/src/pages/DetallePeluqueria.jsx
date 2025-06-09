@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom";
+import { useParams } from "react-router-dom"; 
 import { useState, useEffect } from "react";
 import { getPeluqueriaById } from "../api/peluquerias";
 import GaleriaPeluqueria from "../components/GaleriaPeluqueria";
@@ -17,6 +17,8 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
   const [nombreCliente, setNombreCliente] = useState("");
   const [productoSeleccionado, setProductoSeleccionado] = useState(null);
   const [weather, setWeather] = useState(null);
+  const [horariosOcupados, setHorariosOcupados] = useState([]);
+  const [modalOcupado, setModalOcupado] = useState(false);
 
   useEffect(() => {
     getPeluqueriaById(id).then(data => {
@@ -35,11 +37,30 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
     });
   }, [id]);
 
-  if (!peluqueria) return (
-    <div className="flex items-center justify-center min-h-screen ">
-      <span className="text-6xl animate-spin-slow">💈</span>
-    </div>
-  );
+  useEffect(() => {
+    if (!peluqueria || !peluqueroSeleccionado) {
+      setHorariosOcupados([]);
+      return;
+    }
+    const fecha = new Date().toISOString().split("T")[0];
+    fetch(
+      `/api/citas/ocupadas?peluqueria=${encodeURIComponent(
+        peluqueria.nombre
+      )}&peluquero=${encodeURIComponent(
+        peluqueroSeleccionado
+      )}&fecha=${fecha}`
+    )
+      .then((res) => res.json())
+      .then((data) => setHorariosOcupados(data))
+      .catch(() => setHorariosOcupados([]));
+  }, [peluqueria, peluqueroSeleccionado]);
+
+  if (!peluqueria)
+    return (
+      <div className="flex items-center justify-center min-h-screen ">
+        <span className="text-6xl animate-spin-slow">💈</span>
+      </div>
+    );
 
   const handleProductoClick = (producto) => setProductoSeleccionado(producto);
   const cerrarModal = () => setProductoSeleccionado(null);
@@ -52,7 +73,7 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
           nombre: productoSeleccionado.nombre,
           imagen: productoSeleccionado.imagen,
           descripcion: productoSeleccionado.descripcion,
-          precio: productoSeleccionado.precio || 0
+          precio: productoSeleccionado.precio || 0,
         },
       ]);
       alert("Producto añadido al carrito");
@@ -60,13 +81,19 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
     }
   };
 
-  const nextSlide = () => setSlideIndex((prev) => (prev + 1) % peluqueria.galeria.length);
-  const prevSlide = () => setSlideIndex((prev) => prev === 0 ? peluqueria.galeria.length - 1 : prev - 1);
+  const nextSlide = () =>
+    setSlideIndex((prev) => (prev + 1) % peluqueria.galeria.length);
+  const prevSlide = () =>
+    setSlideIndex((prev) =>
+      prev === 0 ? peluqueria.galeria.length - 1 : prev - 1
+    );
 
   const generarHorarios = () => {
     const horarios = [];
-    for (let h = 8; h <= 13; h++) horarios.push(`${h.toString().padStart(2, "0")}:00`);
-    for (let h = 16; h <= 19; h++) horarios.push(`${h.toString().padStart(2, "0")}:00`);
+    for (let h = 8; h <= 13; h++)
+      horarios.push(`${h.toString().padStart(2, "0")}:00`);
+    for (let h = 16; h <= 19; h++)
+      horarios.push(`${h.toString().padStart(2, "0")}:00`);
     return horarios;
   };
 
@@ -75,37 +102,40 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
     const token = localStorage.getItem("token");
     const fechaHora = `${new Date().toISOString().split("T")[0]} ${horarioSeleccionado}:00`;
 
-    // 1. Guardar la cita en el backend
-    await fetch("/api/citas", {
+    const res = await fetch("/api/citas", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-AUTH-TOKEN": token
+        "X-AUTH-TOKEN": token,
       },
       body: JSON.stringify({
         peluqueria: peluqueria.nombre,
         peluquero: peluqueroSeleccionado,
         fechaHora,
-        nombreCliente
-      })
+        nombreCliente,
+      }),
     });
 
-    // 2. Descargar el PDF como antes
+    if (res.status === 409) {
+      setModalOcupado(true);
+      return;
+    }
+
     fetch("/api/pdf/cita", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "X-AUTH-TOKEN": token
+        "X-AUTH-TOKEN": token,
       },
       body: JSON.stringify({
         nombre: nombreCliente,
         peluqueria: peluqueria.nombre,
         peluquero: peluqueroSeleccionado,
-        hora: horarioSeleccionado
-      })
+        hora: horarioSeleccionado,
+      }),
     })
-      .then(res => res.blob())
-      .then(blob => {
+      .then((res) => res.blob())
+      .then((blob) => {
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement("a");
         a.href = url;
@@ -122,11 +152,14 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
 
   return (
     <div className={`p-2 sm:p-8 min-h-screen ${theme === "dark"}`}>
-      <div className={`w-full max-w-xs sm:mt-5 mt-10 sm:max-w-2xl lg:max-w-5xl mx-auto rounded-lg shadow-2xl overflow-hidden
-        ${theme === "dark" ? "bg-white text-gray-900" : "bg-gray-900 text-white"}`}>
-
+      <div
+        className={`w-full max-w-xs sm:mt-5 mt-10 sm:max-w-2xl lg:max-w-5xl mx-auto rounded-lg shadow-2xl overflow-hidden
+        ${theme === "dark" ? "bg-white text-gray-900" : "bg-gray-900 text-white"}`}
+      >
         <div className={`p-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white`}>
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">{peluqueria.nombre}</h2>
+          <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+            {peluqueria.nombre}
+          </h2>
           <p className="mt-2 text-base sm:text-lg">📍 {peluqueria.direccion}</p>
           {weather && (
             <div className="mt-2 text-sm sm:text-base">
@@ -135,7 +168,6 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
           )}
         </div>
 
-        {/* Carrusel */}
         <div className="hidden sm:block">
           <GaleriaPeluqueria
             galeria={peluqueria.galeria}
@@ -145,10 +177,19 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
           />
         </div>
 
-        {/* Información */}
-        <div className={`p-6 ${theme === "dark" ? "bg-white/90 text-gray-900" : "bg-gray-900/90 text-white"}`}>
+        <div
+          className={`p-6 ${
+            theme === "dark"
+              ? "bg-white/90 text-gray-900"
+              : "bg-gray-900/90 text-white"
+          }`}
+        >
           <ListaPeluqueros peluqueros={peluqueria.peluqueros} theme={theme} />
-          <ListaProductos productos={peluqueria.productos} theme={theme} onProductoClick={handleProductoClick} />
+          <ListaProductos
+            productos={peluqueria.productos}
+            theme={theme}
+            onProductoClick={handleProductoClick}
+          />
           <button
             onClick={() => setMostrarFormulario(!mostrarFormulario)}
             className="px-6 py-3 rounded-full bg-gradient-to-r from-blue-600 via-cyan-500 to-green-400 text-white font-bold shadow-md transition hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-400"
@@ -156,18 +197,26 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
             {mostrarFormulario ? "Cerrar formulario" : "Agendar cita"}
           </button>
           {mostrarFormulario && (
-            <FormularioReserva
-              theme={theme}
-              nombreCliente={nombreCliente}
-              setNombreCliente={setNombreCliente}
-              peluqueroSeleccionado={peluqueroSeleccionado}
-              setPeluqueroSeleccionado={setPeluqueroSeleccionado}
-              horarioSeleccionado={horarioSeleccionado}
-              setHorarioSeleccionado={setHorarioSeleccionado}
-              peluqueros={peluqueria.peluqueros}
-              generarHorarios={generarHorarios}
-              onSubmit={handleReserva}
-            />
+            <>
+              <FormularioReserva
+                theme={theme}
+                nombreCliente={nombreCliente}
+                setNombreCliente={setNombreCliente}
+                peluqueroSeleccionado={peluqueroSeleccionado}
+                setPeluqueroSeleccionado={setPeluqueroSeleccionado}
+                horarioSeleccionado={horarioSeleccionado}
+                setHorarioSeleccionado={setHorarioSeleccionado}
+                peluqueros={peluqueria.peluqueros}
+                generarHorarios={generarHorarios}
+                onSubmit={handleReserva}
+                horariosOcupados={horariosOcupados}
+              />
+              {modalOcupado && (
+                <p className="mt-4 text-red-600 font-semibold">
+                  Ese horario ya está reservado. Por favor, elige otro.
+                </p>
+              )}
+            </>
           )}
         </div>
       </div>
