@@ -5,7 +5,7 @@ provider "aws" {
 resource "aws_instance" "botipeluquerias" {
   ami                    = "ami-0f9de6e2d2f067fca"  # Ubuntu 22.04 LTS (por ejemplo)
   instance_type          = "t2.micro"
-  key_name               = "BotiPeluquerias"
+  key_name               = "BotiPeluqueriasNueva"
   vpc_security_group_ids = ["sg-01e62c8f8b15e47f1"]
   subnet_id              = "subnet-0ff43c912c80b8f20"
 
@@ -17,7 +17,7 @@ resource "aws_instance" "botipeluquerias" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("C:/Users/javip/.ssh/BotiPeluquerias.pem")
+      private_key = file("C:/Users/javip/.ssh/BotiPeluqueriasNueva.pem")
       host        = self.public_ip
     }
   }
@@ -62,7 +62,7 @@ resource "aws_instance" "botipeluquerias" {
     connection {
       type        = "ssh"
       user        = "ubuntu"
-      private_key = file("C:/Users/javip/.ssh/BotiPeluquerias.pem")
+      private_key = file("C:/Users/javip/.ssh/BotiPeluqueriasNueva.pem")
       host        = self.public_ip
     }
   }
