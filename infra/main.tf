@@ -3,13 +3,12 @@ provider "aws" {
 }
 
 resource "aws_instance" "botipeluquerias" {
-  ami                    = "ami-0f9de6e2d2f067fca"  # Ubuntu 22.04 LTS (por ejemplo)
+  ami                    = "ami-0f9de6e2d2f067fca"  # Ubuntu 22.04 LTS
   instance_type          = "t2.micro"
   key_name               = "BotiPeluqueriasNueva"
   vpc_security_group_ids = ["sg-01e62c8f8b15e47f1"]
   subnet_id              = "subnet-0ff43c912c80b8f20"
 
-  # Subida del código fuente al servidor
   provisioner "file" {
     source      = "C:/Users/javip/Documents/BotiPeluquerias-TFG"
     destination = "/home/ubuntu/BotiPeluquerias-TFG"
@@ -22,41 +21,38 @@ resource "aws_instance" "botipeluquerias" {
     }
   }
 
-  # Instalación de dependencias y despliegue con Docker
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get update",
       "sudo apt-get install -y ca-certificates curl gnupg lsb-release",
 
-      # Docker GPG Key
-      "sudo mkdir -p /etc/apt/keyrings",
+      # Instalar Docker
+      "sudo mkdir -m 0755 -p /etc/apt/keyrings",
       "curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg",
-
-      # Docker repo
       "echo \"deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable\" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null",
-
       "sudo apt-get update",
-
-      # Instalar Docker y Compose plugin moderno
       "sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin",
 
-      # Iniciar y habilitar Docker
       "sudo systemctl start docker",
       "sudo systemctl enable docker",
 
-      
-
-      # Cambiar al directorio y levantar los contenedores
+      # Mover a la carpeta del proyecto
       "cd /home/ubuntu/BotiPeluquerias-TFG",
-      "sudo docker compose up -d",
 
-      # Esperar a que MySQL esté listo y restaurar el dump
-      "sleep 15",
-      "sudo docker cp infra/dump.sql botipeluquerias-tfg-db-1:/dump.sql",
-      "sudo docker exec botipeluquerias-tfg-db-1 sh -c 'mysql -u root -proot BotiPeluquerias < /dump.sql'",
+      # Eliminar volumen previo (si existía)
+      "sudo docker volume rm botipeluquerias_db_data || true",
 
-      # Marcar finalización para depurar
-      "echo 'Provisioning completed' > /home/ubuntu/provisioning_log.txt"
+      # Levantar servicios
+      "sudo docker compose up -d --build",
+
+      # Esperar a MySQL
+      "echo 'Esperando a MySQL...'; sleep 25",
+
+      # Importar dump SQL
+      "sudo docker cp infra/dump.sql botipeluquerias-db-1:/dump.sql",
+      "sudo docker exec botipeluquerias-db-1 sh -c 'mysql --binary-mode=1 -u root -proot BotiPeluquerias < /dump.sql'",
+
+      "echo 'Provisioning completed' | sudo tee /home/ubuntu/provisioning_log.txt"
     ]
 
     connection {

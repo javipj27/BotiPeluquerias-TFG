@@ -1,3 +1,5 @@
+name: botipeluquerias
+
 services:
   db:
     image: mysql:8.0
@@ -27,8 +29,6 @@ services:
              php bin/console doctrine:migrations:migrate --no-interaction &&
              php -S 0.0.0.0:8000 -t public"
 
-
-
   frontend:
     build:
       context: ./frontend
@@ -52,6 +52,7 @@ services:
     volumes:
       - ./nginx.conf:/etc/nginx/nginx.conf:ro
       - ./certs:/etc/nginx/certs:ro
+      - ./backend/public/uploads:/var/www/public/uploads:ro 
 
 volumes:
   db_data:
