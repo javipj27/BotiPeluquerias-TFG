@@ -6,6 +6,8 @@ export default function FormularioReserva({
   setPeluqueroSeleccionado,
   horarioSeleccionado,
   setHorarioSeleccionado,
+  fechaSeleccionada, // NUEVO
+  setFechaSeleccionada, // NUEVO
   peluqueros,
   generarHorarios,
   onSubmit,
@@ -39,6 +41,16 @@ export default function FormularioReserva({
             </option>
           ))}
         </select>
+      </div>
+      <div>
+        <label className="block font-bold mb-1">Selecciona día</label>
+        <input
+          type="date"
+          className={`w-full p-2 border rounded-lg ${theme === "dark" ? "bg-white text-gray-900" : "bg-gray-900 text-white"}`}
+          value={fechaSeleccionada}
+          onChange={e => setFechaSeleccionada(e.target.value)}
+          required
+        />
       </div>
       <div>
         <label className="block font-bold mb-1">Selecciona horario</label>

@@ -19,6 +19,7 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
   const [weather, setWeather] = useState(null);
   const [horariosOcupados, setHorariosOcupados] = useState([]);
   const [modalOcupado, setModalOcupado] = useState(false);
+  const [fechaSeleccionada, setFechaSeleccionada] = useState(() => new Date().toISOString().split("T")[0]);
 
   useEffect(() => {
     getPeluqueriaById(id).then(data => {
@@ -38,22 +39,21 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
   }, [id]);
 
   useEffect(() => {
-    if (!peluqueria || !peluqueroSeleccionado) {
+    if (!peluqueria || !peluqueroSeleccionado || !fechaSeleccionada) {
       setHorariosOcupados([]);
       return;
     }
-    const fecha = new Date().toISOString().split("T")[0];
     fetch(
       `/api/citas/ocupadas?peluqueria=${encodeURIComponent(
         peluqueria.nombre
       )}&peluquero=${encodeURIComponent(
         peluqueroSeleccionado
-      )}&fecha=${fecha}`
+      )}&fecha=${fechaSeleccionada}`
     )
       .then((res) => res.json())
       .then((data) => setHorariosOcupados(data))
       .catch(() => setHorariosOcupados([]));
-  }, [peluqueria, peluqueroSeleccionado]);
+  }, [peluqueria, peluqueroSeleccionado, fechaSeleccionada]);
 
   if (!peluqueria)
     return (
@@ -100,7 +100,7 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
   const handleReserva = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    const fechaHora = `${new Date().toISOString().split("T")[0]} ${horarioSeleccionado}:00`;
+    const fechaHora = `${fechaSeleccionada} ${horarioSeleccionado}:00`;
 
     const res = await fetch("/api/citas", {
       method: "POST",
@@ -148,6 +148,7 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
     setNombreCliente("");
     setPeluqueroSeleccionado("");
     setHorarioSeleccionado("");
+    setFechaSeleccionada(new Date().toISOString().split("T")[0]);
   };
 
   return (
@@ -206,6 +207,8 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
                 setPeluqueroSeleccionado={setPeluqueroSeleccionado}
                 horarioSeleccionado={horarioSeleccionado}
                 setHorarioSeleccionado={setHorarioSeleccionado}
+                fechaSeleccionada={fechaSeleccionada}
+                setFechaSeleccionada={setFechaSeleccionada}
                 peluqueros={peluqueria.peluqueros}
                 generarHorarios={generarHorarios}
                 onSubmit={handleReserva}
