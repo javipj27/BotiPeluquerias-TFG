@@ -111,22 +111,22 @@ Esto desplegará la infraestructura en AWS y levantará todos los servicios auto
 ---------------------------------------------
 ````ssh
 BotiPeluquerias-TFG/
-├── [backend](http://_vscodecontentref_/2)                   # Código fuente del backend (Symfony, PHP)
+├── [backend]                 # Código fuente del backend (Symfony, PHP)
 │   ├── src/
 │   │   ├── Controller/        # Controladores de la API
 │   │   └── Entity/            # Entidades de Doctrine 
 │   └── public/uploads/        # Carpeta para archivos subidos 
-├── [frontend](http://_vscodecontentref_/3)                  # Código fuente del frontend (React)
+├── [frontend]                # Código fuente del frontend (React)
 │   └── src/
 │       ├── components/        # Componentes reutilizables 
 │       └── pages/             # Páginas principales
-├── [infra](http://_vscodecontentref_/4)                     # Infraestructura como código
+├── [infra]                   # Infraestructura como código
 │   ├── main.tf                # Script principal de Terraform para AWS
 │   └── dump.sql               # Volcado de la base de datos MySQL
-├── [docker-compose.yml](http://_vscodecontentref_/5)         # Orquestación de contenedores Docker
-├── [nginx.conf](http://_vscodecontentref_/6)                 # Configuración de Nginx como proxy inverso
-├── [certs](http://_vscodecontentref_/7)                     # Certificados SSL para Nginx
-└── [README.md](http://_vscodecontentref_/8)                  # Documentación principal del proyecto
+├── [docker-compose.yml]        # Orquestación de contenedores Docker
+├── [nginx.conf])                 # Configuración de Nginx como proxy inverso
+├── [certs]                   # Certificados SSL para Nginx
+└── [README.md]                 # Documentación principal del proyecto
 `````
 
 
