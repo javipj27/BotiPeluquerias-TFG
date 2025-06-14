@@ -10,7 +10,6 @@ Facilita la gestión de citas y compras de peluquerías con una interfaz sencill
 1. [📝 Descripción general](#-descripción-general)
 2. [⚙️ Instalación y ejecución](#️-instalación-y-ejecución)
    - [🔧 Requisitos previos](#-requisitos-previos)
-   - [🌿 Ramas del proyecto](#-ramas-del-proyecto)
    - [📥 Clonación del repositorio](#-clonación-del-repositorio)
    - [⚛️ Frontend - React](#️-frontend---react)
    - [🔙 Backend - Symfony API con Docker](#-backend---symfony-api-con-docker)
@@ -38,12 +37,7 @@ BotiPeluquerias es una plataforma web para la gestión integral de peluquerías,
 - [Symfony CLI](https://symfony.com/download) (opcional para desarrollo local)
 - [Terraform](https://www.terraform.io/) (para despliegue en AWS)
 - Cuenta de AWS (para producción)
-
-### 🌿 Ramas del proyecto
-
-- **main**: desarrollo local y pruebas.
-- **prod**: configuración para despliegue en producción (Docker, Nginx, AWS).
-
+- 
 ### 📥 Clonación del repositorio
 
 ```sh
