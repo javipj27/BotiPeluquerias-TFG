@@ -47,25 +47,43 @@ Facilita la gestion de las citas y compras de peluquerias con una interfaz senci
 ------------------------------------------
 
 BotiPeluquerias-TFG/
-│
+
+
 ├── backend/                   # Código fuente del backend (Symfony, PHP)
+
 │   ├── src/
+
 │   │   └── Controller/        # Controladores de la API
+
 │   │   └── Entity/            # Entidades de Doctrine 
+
 │   └── public/uploads/        # Carpeta para archivos subidos 
+
 │
+
 ├── frontend/                  # Código fuente del frontend (React)
+
 │   └── src/
+
 │       └── components/        # Componentes reutilizables 
+
 │       └── pages/             # Páginas principales
+
 │
+
 ├── infra/                     # Infraestructura como código
+
 │   ├── main.tf                # Script principal de Terraform para AWS
 │   └── dump.sql               # Volcado de la base de datos MySQL
+
 │
+
 ├── docker-compose.yml         # Orquestación de contenedores Docker
+
 ├── nginx.conf                 # Configuración de Nginx como proxy inverso
+
 ├── certs/                     # Certificados SSL para Nginx
+
 └── README.md                  # Documentación principal del proyecto
 
 
