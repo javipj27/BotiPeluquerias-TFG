@@ -74,12 +74,7 @@ export default function AdminPeluquerias({theme}) {
             Administración de Peluquerías
           </h2>        
           <div className="flex flex-wrap gap-4 mb-4">
-          <button
-            onClick={handleExport}
-            className="px-4 py-2 rounded-full bg-gradient-to-r from-green-500 via-blue-500 to-cyan-400 text-white font-bold shadow hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-green-400"
-          >
-            Exportar Peluquerías
-          </button>
+          
           <label className="px-4 py-2 rounded-full bg-gradient-to-r from-blue-600 via-cyan-500 to-green-400 text-white font-bold shadow cursor-pointer hover:scale-105 transition focus:outline-none focus:ring-2 focus:ring-blue-400">
             Importar Peluquerías
             <input
