@@ -19,6 +19,7 @@ export default function App() {
   const [theme, setTheme] = useState(() => localStorage.getItem("theme") || "light");
 
   useEffect(() => {
+    // Cambia la clase del documento según el tema seleccionado
     document.documentElement.classList.remove("light", "dark");
     document.documentElement.classList.add(theme === "dark" ? "dark" : "light");
     localStorage.setItem("theme", theme);
@@ -43,6 +44,7 @@ export default function App() {
   }, [carrito]);
 
   useEffect(() => {
+    // Sincroniza el estado de autenticación y el carrito con localStorage
     const syncAuth = () => {
       setIsAuthenticated(localStorage.getItem("isAuthenticated") === "true");
       setIsAdmin(JSON.parse(localStorage.getItem("roles") || "[]").includes("ROLE_ADMIN"));
@@ -62,6 +64,7 @@ export default function App() {
     };
   }, []);
 
+  // Maneja el cierre de sesión
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
     localStorage.removeItem("username");

@@ -10,6 +10,7 @@ export default function Register({ theme, setTheme }) {
   const handleRegister = async ({ email, username, nombre, telefono, password }) => {
     setError("");
     try {
+      // Enviar datos de registro al servidor
       const res = await fetch("/api/register", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -20,6 +21,7 @@ export default function Register({ theme, setTheme }) {
         setError(data.error || "Error al registrar");
         return;
       }
+      // Guardar datos del usuario en localStorage
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("username", data.username || email);
       localStorage.setItem("token", data.token);

@@ -19,12 +19,15 @@ class CitaController extends AbstractController
     public function historialCitas(CitaRepository $citaRepository, LoggerInterface $logger): JsonResponse
     {
         /** @var \App\Entity\Usuario $usuario */
+        //obtienes el usuario autenticado
         $usuario = $this->getUser();
         $logger->info('Consulta de historial de citas', ['usuario_id' => $usuario->getId()]);
+        //buscas las citas del usuario autenticado
         $citas = $citaRepository->findByUsuarioId($usuario->getId());
 
         $data = [];
         foreach ($citas as $cita) {
+            //construye array con los datos de la cita
             $data[] = [
                 'id' => $cita->getId(),
                 'peluqueria' => $cita->getPeluqueria(),
@@ -33,6 +36,7 @@ class CitaController extends AbstractController
                 'nombreCliente' => $cita->getNombreCliente(),
             ];
         }
+        //devolvemos citas json
         return $this->json($data);
     }
 
@@ -42,9 +46,11 @@ class CitaController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         /** @var \App\Entity\Usuario $usuario */
+        //obtienes el usuario autenticado
         $usuario = $this->getUser();
         $logger->info('Intento de crear cita', ['usuario_id' => $usuario->getId()]);
 
+        //verificar que datos estan presentes 
         if (!isset($data['peluqueria'], $data['peluquero'], $data['fechaHora'], $data['nombreCliente'])) {
             $logger->warning('Creación de cita fallida: faltan datos');
             return $this->json(['error' => 'Faltan datos'], 400);
@@ -65,6 +71,7 @@ class CitaController extends AbstractController
             return $this->json(['error' => 'Ese horario ya está reservado'], 409);
         }
 
+        //crea cita y la asocia al usuario
         $cita = new Cita();
         $cita->setUsuario($usuario);
         $cita->setPeluqueria($data['peluqueria']);
@@ -90,6 +97,7 @@ class CitaController extends AbstractController
             return $this->json(['error' => 'Parámetros requeridos: peluqueria, peluquero, fecha'], 400);
         }
 
+        //construye la consulta para ver las horas ocupadas
         $qb = $em->getRepository(Cita::class)->createQueryBuilder('c')
             ->select('c.fechaHora')
             ->where('c.peluqueria = :peluqueria')
@@ -100,6 +108,7 @@ class CitaController extends AbstractController
             ->setParameter('fecha', $fecha);
 
         $result = $qb->getQuery()->getResult();
+        //extrae solo la hora de las citas ocupadas
         $horasOcupadas = array_map(fn($row) => $row['fechaHora']->format('H:i'), $result);
 
         return $this->json($horasOcupadas);

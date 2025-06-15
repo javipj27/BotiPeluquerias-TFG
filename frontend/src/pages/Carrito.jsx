@@ -4,12 +4,14 @@ import CarritoLista from "../components/CarritoLista";
 export default function Carrito({ carrito, setCarrito, theme }) {
   const [mensajeCompra, setMensajeCompra] = useState("");
 
+  // Maneja la eliminación de un producto del carrito
   const handleEliminarProducto = (index) => {
     const nuevoCarrito = [...carrito];
     nuevoCarrito.splice(index, 1);
     setCarrito(nuevoCarrito);
   };
 
+  // Maneja la compra de los productos en el carrito
   const handleComprar = async () => {
     const token = localStorage.getItem("token");
     const total = carrito.reduce((acc, prod) => acc + (parseFloat(prod.precio) || 0), 0);
@@ -39,6 +41,7 @@ export default function Carrito({ carrito, setCarrito, theme }) {
         total
       })
     })
+    // Convertir la respuesta a blob y crear un enlace para descargar
       .then(res => res.blob())
       .then(blob => {
         const url = window.URL.createObjectURL(blob);

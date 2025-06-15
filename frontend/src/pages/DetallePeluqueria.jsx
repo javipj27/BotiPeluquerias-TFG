@@ -38,11 +38,13 @@ export default function DetallePeluqueria({ setCarrito, theme }) {
     });
   }, [id]);
 
+  // Obtener horarios ocupados
   useEffect(() => {
     if (!peluqueria || !peluqueroSeleccionado || !fechaSeleccionada) {
       setHorariosOcupados([]);
       return;
     }
+
     fetch(
       `/api/citas/ocupadas?peluqueria=${encodeURIComponent(
         peluqueria.nombre

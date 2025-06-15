@@ -10,6 +10,7 @@ export default function Login({ theme, setTheme }) {
   const handleLogin = async ({ emailOrUsername, password }) => {
     setError("");
     try {
+      //funcion para autenticar al usuario
       const res = await fetch("/api/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -20,6 +21,7 @@ export default function Login({ theme, setTheme }) {
         setError(data.error || "Error de autenticación");
         return;
       }
+      // Guardar datos del usuario en localStorage
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("username", data.username || emailOrUsername);
       localStorage.setItem("token", data.token);

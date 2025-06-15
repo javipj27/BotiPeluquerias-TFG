@@ -27,6 +27,7 @@ class AuthController extends AbstractController
     ): JsonResponse {
         $data = json_decode($request->getContent(), true);
 
+        //comprueba campos obligatorios
         if (
             !isset($data['email']) ||
             !isset($data['password']) ||
@@ -47,12 +48,14 @@ class AuthController extends AbstractController
             return $this->json(['error' => 'El nombre de usuario ya está registrado'], 409);
         }
 
+        //crea un usario nuevo y asigna los datos
         $usuario = new Usuario();
         $usuario->setEmail($data['email']);
         $usuario->setUsernameField($data['username']);
         $usuario->setNombre($data['nombre']);
         $usuario->setTelefono($data['telefono'] ?? null);
         $usuario->setRoles(['ROLE_USER']);
+        //hasheo contrasña y genera token de api aleatorio
         $hashedPassword = $passwordHasher->hashPassword($usuario, $data['password']);
         $usuario->setPassword($hashedPassword);
         $usuario->setApiToken(ByteString::fromRandom(40)->toString());
@@ -81,12 +84,14 @@ class AuthController extends AbstractController
 
         $logger->info('Intento de login', ['email' => $data['email'] ?? null]);
 
+        // Comprueba que se reciban email/username y contraseña
         if (!isset($data['email']) || !isset($data['password'])) {
             $logger->warning('Login fallido: faltan datos');
             return $this->json(['error' => 'Email o nombre de usuario y contraseña son obligatorios'], 400);
         }
 
         // Buscar por email o username
+        //verificaciones
         $usuario = $usuarioRepository->findOneBy(['email' => $data['email']]);
         if (!$usuario) {
                 $logger->warning('Login fallido: usuario no encontrado', ['email' => $data['email']]);

@@ -1,29 +1,33 @@
 name: botipeluquerias
 
 services:
+# servicio bbdd mysql
   db:
-    image: mysql:8.0
-    restart: always
+    image: mysql:8.0 #version
+    restart: always # reiniciar siempre
     environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: BotiPeluquerias
+      MYSQL_ROOT_PASSWORD: root # contraseña root
+      MYSQL_DATABASE: BotiPeluquerias # nombre de la base de datos
     ports:
-      - "3306:3306"
+      - "3306:3306" # puerto de la bbdd
     volumes:
-      - db_data:/var/lib/mysql
+      - db_data:/var/lib/mysql # volumen persistente para la bbdd
 
   backend:
     build:
-      context: ./backend
-    restart: always
+      context: ./backend # ruta al Dockerfile del backend
+    restart: always # reiniciar siempre
     ports:
-      - "8000:8000"
+      - "8000:8000" # puerto del backend
     depends_on:
-      - db
+      - db # depende del servicio de bbdd
     environment:
+    # Configuración de entorno para el backend
       DATABASE_URL: "mysql://root:root@db:3306/BotiPeluquerias?serverVersion=8.0.32&charset=utf8mb4"
     volumes:
+    # Volúmenes para persistencia de datos y código
       - ./backend/public/uploads:/var/www/public/uploads
+      #comando para iniciar al backend
     command: >
       sh -c "until php bin/console doctrine:query:sql 'SELECT 1'; do sleep 2; done &&
              php bin/console doctrine:migrations:migrate --no-interaction &&
@@ -50,9 +54,10 @@ services:
       - frontend
       - backend
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certs:/etc/nginx/certs:ro
-      - ./backend/public/uploads:/var/www/public/uploads:ro 
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro # configuración de Nginx
+      - ./certs:/etc/nginx/certs:ro # certificados SSL
+      - ./backend/public/uploads:/var/www/public/uploads:ro # directorio de subidas del backend
 
+# Volumen persistente para la base de datos
 volumes:
   db_data:

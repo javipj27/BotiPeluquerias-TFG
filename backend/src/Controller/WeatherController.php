@@ -13,9 +13,11 @@ class WeatherController extends AbstractController
     #[Route('/api/weather', name: 'api_weather', methods: ['GET'])]
     public function weather(HttpClientInterface $client, LoggerInterface $logger): JsonResponse
     {
+        //definimos coords
         $lat = 40.4168; // Madrid
         $lon = -3.7038;
         $logger->info('Consulta de clima', ['lat' => $lat, 'lon' => $lon]);
+        // Realizamos la consulta a la API de Open-Meteo
         $response = $client->request('GET', 'https://api.open-meteo.com/v1/forecast', [
             'query' => [
                 'latitude' => $lat,

@@ -2,25 +2,30 @@ provider "aws" {
   region = "us-east-1"
 }
 
+#definimos una instancia
 resource "aws_instance" "botipeluquerias" {
   ami                    = "ami-0f9de6e2d2f067fca"  # Ubuntu 22.04 LTS
-  instance_type          = "t2.micro"
-  key_name               = "BotiPeluqueriasNueva"
-  vpc_security_group_ids = ["sg-01e62c8f8b15e47f1"]
-  subnet_id              = "subnet-0ff43c912c80b8f20"
+  instance_type          = "t2.micro" #tipo de instancia
+  key_name               = "BotiPeluqueriasNueva" #nombre de la clave SSH
+  vpc_security_group_ids = ["sg-01e62c8f8b15e47f1"] # Security Group ID
+  subnet_id              = "subnet-0ff43c912c80b8f20" # Subnet ID
 
   provisioner "file" {
-    source      = "C:/Users/javip/Documents/BotiPeluquerias-TFG"
-    destination = "/home/ubuntu/BotiPeluquerias-TFG"
+    source      = "C:/Users/javip/Documents/BotiPeluquerias-TFG" # Ruta al proyecto local
+    destination = "/home/ubuntu/BotiPeluquerias-TFG" # Ruta de destino en la instancia
 
+  #configuracion de la conexión SSH
     connection {
-      type        = "ssh"
+      type        = "ssh" 
       user        = "ubuntu"
+      # Ruta a la clave privada para la conexión SSH
       private_key = file("C:/Users/javip/.ssh/BotiPeluqueriasNueva.pem")
+      #ip publica
       host        = self.public_ip
     }
   }
 
+  # Provisionamiento de la instancia para ejecutar los comandos
   provisioner "remote-exec" {
     inline = [
       "sudo apt-get update",
@@ -55,6 +60,7 @@ resource "aws_instance" "botipeluquerias" {
       "echo 'Provisioning completed' | sudo tee /home/ubuntu/provisioning_log.txt"
     ]
 
+    # Configuración de la conexión SSH para el provisionamiento remoto
     connection {
       type        = "ssh"
       user        = "ubuntu"
@@ -63,11 +69,13 @@ resource "aws_instance" "botipeluquerias" {
     }
   }
 
+  # Etiquetas para la instancia
   tags = {
     Name = "BotiPeluquerias"
   }
 }
 
+# Salida de la IP pública de la instancia
 output "public_ip" {
   value       = aws_instance.botipeluquerias.public_ip
   description = "IP pública de la instancia EC2"

@@ -12,10 +12,12 @@ RUN wget https://get.symfony.com/cli/installer -O - | bash \
 # Composer
 COPY --from=composer:2.7 /usr/bin/composer /usr/bin/composer
 
+# directorio de trabajo 
 WORKDIR /var/www
 
 COPY . .
 
+# Instalar dependencias de PHP
 RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-interaction --prefer-dist --optimize-autoloader
 
 EXPOSE 8000

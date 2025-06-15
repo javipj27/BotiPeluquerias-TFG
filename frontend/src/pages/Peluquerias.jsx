@@ -8,6 +8,7 @@ export default function Peluquerias({theme}) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Obtener lista de peluquerías
     getPeluquerias().then(data => {
       if (Array.isArray(data)) {
         setPeluquerias(data);

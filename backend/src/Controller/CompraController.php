@@ -23,9 +23,11 @@ class CompraController extends AbstractController
         /** @var \App\Entity\Usuario $usuario */
         $usuario = $this->getUser();
         $logger->info('Consulta de historial de compras', ['usuario_id' => $usuario->getId()]);
+        //buscamos por id
         $compras = $compraRepository->findByUsuarioId($usuario->getId());
 
         $data = [];
+        //recorre compras y preara los datos
         foreach ($compras as $compra) {
             $data[] = [
                 'id' => $compra->getId(),
@@ -41,17 +43,20 @@ class CompraController extends AbstractController
     #[IsGranted('IS_AUTHENTICATED_FULLY')]
     public function crearCompra(Request $request, EntityManagerInterface $em,  LoggerInterface $logger): JsonResponse
     {
+        //decodifica el json de la peticion
         $data = json_decode($request->getContent(), true);
         /** @var \App\Entity\Usuario $usuario */
         $usuario = $this->getUser();
 
         $logger->info('Intento de crear compra', ['usuario_id' => $usuario->getId()]);
 
+        //verifica 
         if (!isset($data['productos']) || !isset($data['total'])) {
             $logger->warning('Creación de compra fallida: faltan datos');
             return $this->json(['error' => 'Faltan datos'], 400);
         }
 
+        //crea la compra
         $compra = new Compra();
         $compra->setUsuario($usuario);
         $compra->setProductos($data['productos']);

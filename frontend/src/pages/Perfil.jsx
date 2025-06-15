@@ -4,6 +4,7 @@ export default function Perfil({ theme }) {
   const [usuario, setUsuario] = useState(null);
 
   useEffect(() => {
+    // Cargar datos del usuario desde localStorage
     const username = localStorage.getItem("username");
     const email = localStorage.getItem("email");
     const telefono = localStorage.getItem("telefono");

@@ -20,17 +20,22 @@ class UploadController extends AbstractController
             return new JsonResponse(['error' => 'No file uploaded'], 400);
         }
 
+        //define directorio
         $uploadsDir = $this->getParameter('kernel.project_dir') . '/public/uploads';
         if (!is_dir($uploadsDir)) {
+            // Crea el directorio si no existe
             mkdir($uploadsDir, 0777, true);
             $logger->info('Directorio de uploads creado: ' . $uploadsDir);
         }
 
+        //sano para evitar problemas con nombres de archivos
         $originalFilename = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
         $safeFilename = preg_replace('/[^a-zA-Z0-9-_]/', '_', $originalFilename);
+        // Genera un nombre único para el archivo
         $newFilename = $safeFilename . '-' . uniqid() . '.' . $file->guessExtension();
 
         try {
+            // Mueve el archivo a la carpeta de uploads
             $file->move($uploadsDir, $newFilename);
             $logger->info("Archivo subido correctamente: $newFilename");
         } catch (FileException $e) {

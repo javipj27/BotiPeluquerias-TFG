@@ -5,6 +5,7 @@ export default function HistorialCitas({ theme }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Obtener citas del usuario
     const token = localStorage.getItem("token");
     fetch("/api/citas", {
       headers: { "X-AUTH-TOKEN": token }

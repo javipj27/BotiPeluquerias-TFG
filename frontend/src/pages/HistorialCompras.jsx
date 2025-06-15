@@ -5,6 +5,7 @@ export default function HistorialCompras({ theme }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // Obtener compras del usuario
     const token = localStorage.getItem("token");
     fetch("/api/compras", {
       headers: { "X-AUTH-TOKEN": token }
